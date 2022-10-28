@@ -1,6 +1,6 @@
 #ifndef __SALES_H__
 #define __SALES_H__
-
+#include <iostream>
 namespace SALES
 {
 	const int QUARTERS = 4;
