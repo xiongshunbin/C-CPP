@@ -28,6 +28,31 @@ Stonewt::Stonewt()	// default constuctor, wt = 0
 Stonewt::~Stonewt()	// destructor
 {
 }
+
+bool Stonewt::operator<(const Stonewt & s) const
+{
+	return pounds<s.pounds;
+}
+bool Stonewt::operator<=(const Stonewt & s) const
+{
+	return pounds<=s.pounds;
+}
+bool Stonewt::operator>(const Stonewt & s) const
+{
+	return pounds>s.pounds;
+}
+bool Stonewt::operator>=(const Stonewt & s) const
+{
+	return pounds>=s.pounds;
+}
+bool Stonewt::operator==(const Stonewt & s) const
+{
+	return pounds<s.pounds;
+}
+bool Stonewt::operator!=(const Stonewt & s) const
+{
+	return pounds<s.pounds;
+}
 // show weight in stones
 void Stonewt::show_stn() const
 {

@@ -1,7 +1,7 @@
-// stonewt.cpp -- Stonewt methods
+// stonewt2.cpp -- Stonewt class methods + conversion functions
 #include <iostream>
 using std::cout;
-#include "stonewt.h"
+#include "stonewt2.h"
 
 // construct Stonewt object from double value
 Stonewt::Stonewt(double lbs)
@@ -11,8 +11,6 @@ Stonewt::Stonewt(double lbs)
 	pounds=lbs;
 }
 // construct Stonewt object from stone, double values
-// if provide this constructor second argument with a default value
-// it will be used which equlse an integer
 Stonewt::Stonewt(int stn,double lbs)
 {
 	stone=stn;
@@ -37,4 +35,23 @@ void Stonewt::show_stn() const
 void Stonewt::show_lbs() const
 {
 	cout<<pounds<<" pounds\n";
+}
+
+// conversion functions
+/*
+Stonewt::operator int() const
+{
+	return int(pounds+0.5);
+}
+*/
+Stonewt::operator double() const
+{
+	return pounds;
+}
+
+Stonewt Stonewt::operator+(const Stonewt & st) const
+{
+	double pds=pounds+pounds;
+	Stonewt sum(pds);
+	return sum;
 }

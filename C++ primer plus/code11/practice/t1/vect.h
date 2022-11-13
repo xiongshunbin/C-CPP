@@ -39,7 +39,6 @@ namespace VECTOR
 			// friends
 			friend Vector operator*(double n,const Vector & a);
 			friend std::ostream & operator<<(std::ostream & os,const Vector & v);
-			operator double(){return mag;}
 	};
 }	// end namespace VECTOR
 

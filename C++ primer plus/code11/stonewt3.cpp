@@ -1,7 +1,7 @@
-// stonewt.cpp -- Stonewt methods
+// stonewt3.cpp -- Stonewt methods
 #include <iostream>
 using std::cout;
-#include "stonewt.h"
+#include "stonewt3.h"
 
 // construct Stonewt object from double value
 Stonewt::Stonewt(double lbs)
@@ -37,4 +37,13 @@ void Stonewt::show_stn() const
 void Stonewt::show_lbs() const
 {
 	cout<<pounds<<" pounds\n";
+}
+Stonewt Stonewt::operator*(double mult) const
+{
+	return Stonewt(pounds*mult);
+}
+
+Stonewt operator*(double mult,const Stonewt & st)
+{
+	return Stonewt(mult*st.pounds);
 }
