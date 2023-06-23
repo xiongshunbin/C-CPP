@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Fonts/fzhzgbjt.TTF</file>
+        <file>Fonts/hwxk.TTF</file>
+        <file>Fonts/login_iconfont.ttf</file>
+        <file>Images/close.png</file>
+        <file>Images/close_on.png</file>
+        <file>Images/login_bg.jpg</file>
+        <file>Images/logo.png</file>
+        <file>Styles/ib_login.css</file>
+        <file>Styles/ib_mainwindow.css</file>
+        <file>Images/clo.png</file>
+        <file>Images/clo_on.png</file>
+        <file>Images/max.png</file>
+        <file>Images/max_on.png</file>
+        <file>Images/min.png</file>
+        <file>Images/min_on.png</file>
+        <file>Images/male.png</file>
+        <file>Images/menu_base_data.png</file>
+        <file>Images/menu_home.png</file>
+        <file>Images/menu_scheduling.png</file>
+        <file>Images/menu_user_manager.png</file>
+        <file>Styles/mydialog.css</file>
+        <file>Images/error.png</file>
+        <file>Styles/ib_includestation.css</file>
+    </qresource>
+</RCC>
