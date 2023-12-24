@@ -3,7 +3,7 @@
 using std::cout;
 using std::endl;
 
-template <class T>
+template <typename T>
 class HasFriend
 {
     private:
@@ -13,14 +13,14 @@ class HasFriend
         HasFriend(const T & i) : item(i) { ct ++; }
         ~HasFriend() { ct --; }
         friend void counts();
-        friend void reports(HasFriend <T> &); // template parameter
+        friend void reports(HasFriend<T> &); // template parameter
 };
 
 // each specialization has its own static data member
 template <class T>
 int HasFriend<T>::ct = 0;
 
-// non-template  friend to all HasFriend<T> classes
+// non-template friend to all HasFriend<T> classes
 void counts()
 {
     cout << "int count: " << HasFriend<int>::ct << "; ";

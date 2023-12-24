@@ -29,6 +29,7 @@ template <class T>
 void counts()
 {
     cout << "template size: " << sizeof(HasFriendT<T>) << "; ";
+    cout << "template counts: " << HasFriendT<T>::ct << endl;
 }
 
 template <class T>
@@ -39,5 +40,17 @@ void report(T & Temp)
 
 int main()
 {
+    counts<int>();
+    HasFriendT<int> hfi1(10);
+    HasFriendT<int> hfi2(20);
+    HasFriendT<double> hfdb(10.5);
+    report(hfi1);   // generate report (HasFriendT<int> &)
+    report(hfi2);   // generate report (HasFriendT<int> &)
+    report(hfdb);   // generate report (HasFriend<double> &)
+    cout << "counts<int>() output:\n";
+    counts<int>();
+    cout << "counts<double>() output:\n";
+    counts<double>();
+
     return 0;
 }
