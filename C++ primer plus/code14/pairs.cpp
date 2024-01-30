@@ -28,6 +28,7 @@ T2 & Pair<T1, T2>::second()
 {
     return b;
 }
+
 int main()
 {
     using std::cout;
