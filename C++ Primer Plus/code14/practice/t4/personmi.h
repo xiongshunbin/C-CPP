@@ -17,8 +17,8 @@ protected:
 public:
     Person() : firstName("no"), lastName("one") { }
     Person(const string& fname, const string& lname) : firstName(fname), lastName(lname) { }
-    virtual ~Person() = 0;
-    virtual void Set() = 0;
+    virtual ~Person();
+    virtual void Set();
     virtual void Show() const = 0;
 };
 
@@ -36,6 +36,7 @@ public:
     Gunslinger(const Person& p, double dtime, int n) : Person(p), drawTime(dtime), notches(n) { }
     void Set();
     void Show() const;
+    double Draw() const { return drawTime; }
 };
 
 class PokerPlayer : virtual public Person
@@ -54,7 +55,11 @@ public:
     BadDude() { }
     BadDude(const string& fname, const string& lname, double dtime, int n) 
         : Person(fname, lname), Gunslinger(fname, lname, dtime, n), PokerPlayer(fname, lname) { }
-
+    BadDude(const Person& p, double dtime, int n) : Person(p), Gunslinger(p, dtime, n), PokerPlayer(p) { }
+    BadDude(const Gunslinger& g) : Person(g), Gunslinger(g), PokerPlayer(g) { }
+    BadDude(const PokerPlayer& p, double dtime, int n) : Person(p), Gunslinger(p, dtime, n), PokerPlayer(p) { }
+    double Gdraw();
+    int Cdraw();
     void Show() const;
 };
 
