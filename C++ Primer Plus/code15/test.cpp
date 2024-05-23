@@ -9,7 +9,7 @@ private:
     int x, y;
 public:
     Temp(int a, int b) : x(a), y (b) { }
-    ~Temp() { }
+    virtual ~Temp() { }
     #if 0
     virtual void show()
     {
@@ -29,7 +29,7 @@ private:
     string info;
 public:
     A(int a, int b, string message) : Temp(a, b), info(message) { }
-    ~A() { }
+    virtual ~A() { }
     void show()
     {
         cout << info << endl;
@@ -43,7 +43,7 @@ private:
     double rate;
 public:
     B(int a, int b, double r) : Temp(a, b), rate(r) { }
-    ~B() { }
+    virtual ~B() { }
     void show(double add)       //  base and derived class have the same name functions
     {
         cout << "rate: " << rate + add << endl;
