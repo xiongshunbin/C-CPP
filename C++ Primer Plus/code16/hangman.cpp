@@ -73,7 +73,7 @@ int main()
                 cout << guesses << " bad guesses left\n";
             }
         }
-        if(guesses > 0 || attempt == target)
+        if(guesses > 0)
             cout << "That's right!\n";
         else
             cout << "Sorry, the word is " << target << ".\n";
