@@ -1,3 +1,5 @@
+// 单例模式
+
 #include <iostream>
 #include <mutex>
 #include <atomic>
