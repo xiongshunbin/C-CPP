@@ -164,6 +164,13 @@ private:
 
 				// 2. enemy对防守位点（房屋）造成伤害
 				HomeManager::instance()->decrease_hp(enemy->get_damage());
+
+				// 3. 如果房屋hp减为0,结束游戏
+				if (!HomeManager::instance()->get_current_hp_num())
+				{
+					ConfigManager::instance()->is_game_win = false;
+					ConfigManager::instance()->is_game_over = true;
+				}
 			}
 		}
 	}
