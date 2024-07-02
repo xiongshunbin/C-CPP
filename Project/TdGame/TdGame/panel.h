@@ -79,13 +79,13 @@ public:
 			switch (hovered_target)
 			{
 			case Panel::HoveredTarget::Top:
-				on_clike_top_area();
+				on_click_top_area();
 				break;
 			case Panel::HoveredTarget::Left:
-				on_clike_left_area();
+				on_click_left_area();
 				break;
 			case Panel::HoveredTarget::Right:
-				on_clike_right_area();
+				on_click_right_area();
 				break;
 			}
 
@@ -188,7 +188,7 @@ public:
 		SDL_RenderCopy(renderer, tex_text_foreground, nullptr, &rect_dst_text);
 	}
 
-protected:
+public:
 	enum class HoveredTarget
 	{
 		None,
@@ -210,9 +210,9 @@ protected:
 	HoveredTarget hovered_target = HoveredTarget::None;
 
 protected:
-	virtual void on_clike_top_area() = 0;
-	virtual void on_clike_left_area() = 0;
-	virtual void on_clike_right_area() = 0;
+	virtual void on_click_top_area() = 0;
+	virtual void on_click_left_area() = 0;
+	virtual void on_click_right_area() = 0;
 
 private:
 	const int size_button = 48;
@@ -227,6 +227,12 @@ private:
 	int width_text = 0, height_text = 0;
 	SDL_Texture* tex_text_background = nullptr;
 	SDL_Texture* tex_text_foreground = nullptr;
+
+public:
+	void set_hovered_target(HoveredTarget hovered_target)
+	{
+		this->hovered_target = hovered_target;
+	}
 };
 
 

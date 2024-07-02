@@ -18,6 +18,7 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <SDL2_rotozoom.h>
 
 class GameManager : public Manager<GameManager>
 {
@@ -25,8 +26,6 @@ class GameManager : public Manager<GameManager>
 public:
 	int run(int argc, char** argv)
 	{
-		Mix_FadeInMusic(ResourcesManager::instance()->get_music_pool().find(ResID::Music_BGM)->second, -1, 1500);
-
 		Uint64 last_counter = SDL_GetPerformanceCounter();
 		const Uint64 counter_freq = SDL_GetPerformanceFrequency();
 
@@ -41,15 +40,17 @@ public:
 			if (delta * 1000 < 1000.0 / 60)
 				SDL_Delay((Uint32)(1000.0 / 60 - delta * 1000));
 
-			// 更新数据
-			on_update(delta);
+			if(is_game_start)
+				on_update(delta);		// 更新数据
 
 			// 清空窗口
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			SDL_RenderClear(renderer);
 
-			// 绘制画面
-			on_render();
+			if (!is_game_start)
+				game_start();
+			else
+				on_render();		// 绘制画面
 
 			// 刷新
 			SDL_RenderPresent(renderer);
@@ -80,6 +81,8 @@ protected:
 		window = SDL_CreateWindow(config->basic_template.window_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 			config->basic_template.window_width, config->basic_template.window_height, SDL_WINDOW_SHOWN);
 		init_assert(window, u8"创建游戏窗口失败！");
+		suf_icon = IMG_Load("resources/icon.png");
+		SDL_SetWindowIcon(window, suf_icon);
 
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
 		init_assert(renderer, u8"创建渲染器失败！");
@@ -93,6 +96,14 @@ protected:
 		banner = new Banner();
 		place_panel = new PlacePanel();
 		upgrade_panel = new UpgradePanel();
+
+		tex_license = IMG_LoadTexture(renderer, "resources/license.png");
+		SDL_SetTextureBlendMode(tex_license, SDL_BLENDMODE_BLEND);
+
+		tex_warning = IMG_LoadTexture(renderer, "resources/warning.png");
+		SDL_SetTextureBlendMode(tex_warning, SDL_BLENDMODE_BLEND);
+
+		tex_current = tex_license;
 	}
 	~GameManager()
 	{
@@ -120,6 +131,14 @@ private:
 	Panel* upgrade_panel = nullptr;
 	Banner* banner = nullptr;
 
+	SDL_Surface* suf_icon;
+
+	bool is_game_start = false;
+	SDL_Texture* tex_license = nullptr;
+	SDL_Texture* tex_warning = nullptr;
+	int fade_speed = 1;
+	SDL_Texture* tex_current = nullptr;
+
 private:
 	void init_assert(bool flag, const char* err_msg)
 	{
@@ -146,6 +165,9 @@ private:
 				break;
 			if (get_cursor_idx_tile(idx_tile_selected, event.motion.x, event.motion.y))
 			{
+				place_panel->set_hovered_target(Panel::HoveredTarget::None);
+				upgrade_panel->set_hovered_target(Panel::HoveredTarget::None);
+
 				get_selected_tile_center_pos(pos_center, idx_tile_selected);
 
 				if (check_home(idx_tile_selected))
@@ -358,6 +380,48 @@ private:
 		pos.y = rect_tile_map.y + idx_tile_selected.y * SIZE_TILE + SIZE_TILE / 2;
 	}
 
+	void game_start()
+	{
+		static int alpha = 0;
+		static int scene = 0;
+		SDL_SetTextureAlphaMod(tex_current, alpha);
+
+		int width_img, height_img;
+		SDL_QueryTexture(tex_current, nullptr, nullptr, &width_img, &height_img);
+
+		int width_screen, height_screen;
+		SDL_GetWindowSizeInPixels(window, &width_screen, &height_screen);
+
+		SDL_Rect rect_dst =
+		{
+			(int)((width_screen - width_img) / 2),
+			(int)((height_screen - height_img) / 2),
+			width_img, height_img
+		};
+
+		SDL_RenderCopy(renderer, tex_current, nullptr, &rect_dst);
+		
+		alpha += fade_speed;
+
+		if (alpha > 255)
+		{
+			alpha = 255;
+			fade_speed *= -1;
+		}
+		else if (alpha < 0)
+		{
+			alpha = 0;
+			tex_current = tex_warning;
+			fade_speed = 1;
+			scene++;
+		}
+
+		if (scene == 2)
+		{
+			is_game_start = true;
+			Mix_FadeInMusic(ResourcesManager::instance()->get_music_pool().find(ResID::Music_BGM)->second, -1, 1500);
+		}
+	}
 };
 
 #endif // !_GAME_MANAGER_H_

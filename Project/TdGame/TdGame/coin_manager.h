@@ -4,6 +4,7 @@
 #include "coin_prop.h"
 #include "manager.h"
 #include "config_manager.h"
+#include "timer.h"
 
 #include <vector>
 
@@ -30,6 +31,8 @@ public:
 
 	void on_update(double delta)
 	{
+		timer_auto_increase_coin.on_update(delta);
+
 		for (CoinProp* coin_prop : coin_prop_list)
 			coin_prop->on_update(delta);
 
@@ -71,6 +74,14 @@ protected:
 	CoinManager()
 	{
 		num_coin = ConfigManager::instance()->num_initial_coin;
+
+		timer_auto_increase_coin.set_one_shot(false);
+		timer_auto_increase_coin.set_wait_time(1);
+		timer_auto_increase_coin.set_on_timeout(
+			[&]()
+			{
+				num_coin++;
+			});
 	}
 
 	~CoinManager()
@@ -82,9 +93,10 @@ protected:
 private:
 	double num_coin = 0;
 
+	Timer timer_auto_increase_coin;
+
 	CoinPropList coin_prop_list;
 
 };
-
 
 #endif // !_COIN_MANAGER_H_

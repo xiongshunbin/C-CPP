@@ -69,7 +69,7 @@ public:
 	}
 
 protected:
-	void on_clike_top_area() override
+	void on_click_top_area() override
 	{
 		CoinManager* instance = CoinManager::instance();
 
@@ -80,7 +80,7 @@ protected:
 		}
 	}
 
-	void on_clike_left_area() override
+	void on_click_left_area() override
 	{
 		CoinManager* instance = CoinManager::instance();
 
@@ -91,7 +91,7 @@ protected:
 		}
 	}
 
-	void on_clike_right_area() override
+	void on_click_right_area() override
 	{
 		CoinManager* instance = CoinManager::instance();
 

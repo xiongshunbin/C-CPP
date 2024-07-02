@@ -162,6 +162,7 @@
     <ClInclude Include="panel.h" />
     <ClInclude Include="place_panel.h" />
     <ClInclude Include="player_manager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="resources_manager.h" />
     <ClInclude Include="route.h" />
     <ClInclude Include="shell_bullet.h" />
@@ -177,6 +178,12 @@
     <ClInclude Include="vector2.h" />
     <ClInclude Include="wave.h" />
     <ClInclude Include="wave_manager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TdGame.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

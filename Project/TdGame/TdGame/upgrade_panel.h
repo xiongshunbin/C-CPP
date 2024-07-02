@@ -16,24 +16,24 @@ public:
 		tex_idle = texture_pool.find(ResID::Tex_UIUpgradeIdle)->second;
 		tex_hovered_top = texture_pool.find(ResID::Tex_UIUpgradeHoveredTop)->second;
 		tex_hovered_left = texture_pool.find(ResID::Tex_UIUpgradeHoveredLeft)->second;
-		tex_hovered_right = texture_pool.find(ResID::Tex_UIPlaceHoveredRight)->second;
+		tex_hovered_right = texture_pool.find(ResID::Tex_UIUpgradeHoveredRight)->second;
 	}
 
 	~UpgradePanel() = default;
 
 	void on_update(SDL_Renderer* renderer) override
 	{
-		static TowerManager* instanec = TowerManager::instance();
+		static TowerManager* instance = TowerManager::instance();
 
-		val_top = (int)instanec->get_upgrade_cost(TowerType::Axeman);
-		val_left = (int)instanec->get_upgrade_cost(TowerType::Archer);
-		val_right = (int)instanec->get_upgrade_cost(TowerType::Gunner);
+		val_top = (int)instance->get_upgrade_cost(TowerType::Axeman);
+		val_left = (int)instance->get_upgrade_cost(TowerType::Archer);
+		val_right = (int)instance->get_upgrade_cost(TowerType::Gunner);
 
 		Panel::on_update(renderer);
 	}
 
 protected:
-	void on_clike_top_area() override
+	void on_click_top_area() override
 	{
 		CoinManager* instance = CoinManager::instance();
 
@@ -44,7 +44,7 @@ protected:
 		}
 	}
 
-	void on_clike_left_area() override
+	void on_click_left_area() override
 	{
 		CoinManager* instance = CoinManager::instance();
 
@@ -55,7 +55,7 @@ protected:
 		}
 	}
 
-	void on_clike_right_area() override
+	void on_click_right_area() override
 	{
 		CoinManager* instance = CoinManager::instance();
 
@@ -65,10 +65,6 @@ protected:
 			instance->decrease_coin(val_right);
 		}
 	}
-
-private:
-
 };
-
 
 #endif // !_UPGRADE_PANEL_H_
