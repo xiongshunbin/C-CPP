@@ -31,22 +31,6 @@ const Test func_ctest() {}
 
 int main()
 {
-    const Test obj;
-
-    // 带有括号的表达式
-    // a : int
-    decltype(obj.num) a = 0;
-    // b : const int&
-    decltype((obj.num)) b = a;
-    // 加法表达式
-    int n = 0, m = 0;
-    // c : int
-    decltype(n + m) c = 0;
-    // d : int&
-    decltype(n = n + m) d = n;  // 对m进行操作之后的结果还是左值
-    decltype(m) xx;             // m是普通变量
-
-    // =============================
     int n = 100;
     // a : int
     decltype(func_int()) a = 0;
@@ -63,18 +47,5 @@ int main()
     // g : const Test
     decltype(func_ctest()) g = Test();
 
-    // =============================
-    int x = 99;
-    const int &y = x;
-    // a : int
-    decltype(x) a = x;
-    // y : const int&
-    // b : const int&
-    decltype(y) b = x;
-    // const int
-    decltype(Test::value) c = 0;
-    Test t;
-    // string
-    decltype(t.text) d = "hello, world";
     return 0;
 }
