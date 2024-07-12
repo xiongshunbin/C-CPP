@@ -21,5 +21,11 @@
     <ClCompile Include="hello_client_win.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="tcp_server_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tcp_client_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

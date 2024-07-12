@@ -130,6 +130,8 @@
   <ItemGroup>
     <ClCompile Include="hello_client_win.c" />
     <ClCompile Include="hello_server_win.c" />
+    <ClCompile Include="tcp_client_win.c" />
+    <ClCompile Include="tcp_server_win.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
