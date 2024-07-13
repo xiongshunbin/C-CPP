@@ -1,0 +1,108 @@
+QWidget#ib_mainWindow {
+    background-color: rgb(219, 224, 229);
+}
+QWidget#ib_titleBar {
+    border-style:solid;
+	border-width:1px;
+	border-color:rgb(187, 187, 187);
+    background-color: rgb(236, 241, 246);
+}
+
+QWidget#ib_titleBar:hover {
+    border-style:solid;
+	border-width:1px;
+	border-color:rgb(187, 187, 187);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(242, 242, 242), stop:1 rgb(221, 221, 221));
+}
+
+QLabel#ib_title {
+    font-weight: bold;
+}
+
+QPushButton#btn_close {
+    border-image: url(":/Images/clo.png");
+}
+
+QPushButton#btn_max {
+    border-image: url(":/Images/max.png");
+}
+
+QPushButton#btn_min {
+    border-image: url(":/Images/min.png");
+}
+
+QPushButton#btn_close:hover {
+    border-image: url(":/Images/clo_on.png");
+}
+
+QPushButton#btn_max:hover {
+    border-image: url(":/Images/max_on.png");
+}
+
+QPushButton#btn_min:hover {
+    border-image: url(":/Images/min_on.png");
+}
+
+QPushButton#btn_vehicle {
+    background-color: rgb(155, 88, 181);
+}
+
+QPushButton#btn_station {
+    background-color: rgb(39, 174, 97);
+}
+
+QPushButton#btn_route {
+    background-color: rgb(53, 152, 219);
+}
+
+QPushButton#btn_schedule {
+    background-color: rgb(243, 155, 19);
+}
+
+QPushButton#btn_staff {
+    background-color: rgb(230, 127, 35);
+}
+
+
+QPushButton#btn_chpass {
+    background-color: rgb(236, 76, 61);
+}
+
+QPushButton[btn="menu"] {
+    border: none;
+    color: white;
+}
+
+QPushButton[btn="option"] {
+    border: none;
+    font-weight: bold;
+}
+
+QWidget#page_main {
+    background-color: white;
+}
+
+QPushButton[btn="option"]:hover {
+    border: none;
+    font-weight: bold;
+    color: rgb(51, 102, 153);
+}
+
+QPushButton[btn="option"]:pressed {
+    border: none;
+    font-weight: bold;
+    color: rgb(51, 102, 153);
+}
+
+QTableView {
+    border-top: 2px solid rgb(255, 187, 88);
+}
+
+
+QHeaderView::section {
+    border:1px solid rgb(235, 238, 245);
+	border-left:none;
+    border-top: none;
+    height: 40px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(250, 250, 250), stop:1 rgb(239, 239, 239));
+}
