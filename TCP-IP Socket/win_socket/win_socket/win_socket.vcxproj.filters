@@ -27,5 +27,14 @@
     <ClCompile Include="tcp_client_win.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="endian_conv_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="inet_adrconv_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="conv_addr_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
