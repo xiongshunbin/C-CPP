@@ -1,5 +1,5 @@
 #undef UNICODE		// #undef用于取消之前定义的宏。根据项目环境，VC++会自主声明这2个宏，这样在后续调用的函数
-#undef _UNICODE		// 中，参数就将转换成unicode形式，给i出错误的运行结果
+#undef _UNICODE		// 中，参数就将转换成unicode形式，给出错误的运行结果
 #include <stdio.h>
 #include <WinSock2.h>
 void ErrorHandling(char* message);
