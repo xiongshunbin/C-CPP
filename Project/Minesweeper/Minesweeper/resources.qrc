@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/border_hor_2x.png</file>
+        <file>res/border_vert_2x.png</file>
+        <file>res/closed.svg</file>
+        <file>res/corner_bottom_left_2x.png</file>
+        <file>res/corner_bottom_right_2x.png</file>
+        <file>res/corner_up_left_2x.png</file>
+        <file>res/corner_up_right_2x.png</file>
+        <file>res/d-1.svg</file>
+        <file>res/d0.svg</file>
+        <file>res/d1.svg</file>
+        <file>res/d2.svg</file>
+        <file>res/d3.svg</file>
+        <file>res/d4.svg</file>
+        <file>res/d5.svg</file>
+        <file>res/d6.svg</file>
+        <file>res/d7.svg</file>
+        <file>res/d8.svg</file>
+        <file>res/d9.svg</file>
+        <file>res/face_lose.svg</file>
+        <file>res/face_pressed.svg</file>
+        <file>res/face_unpressed.svg</file>
+        <file>res/flag.svg</file>
+        <file>res/mine.svg</file>
+        <file>res/mine_red.svg</file>
+        <file>res/t_left_2x.png</file>
+        <file>res/t_right_2x.png</file>
+        <file>res/type0.svg</file>
+        <file>res/type1.svg</file>
+        <file>res/type2.svg</file>
+        <file>res/type3.svg</file>
+        <file>res/type4.svg</file>
+        <file>res/type5.svg</file>
+        <file>res/type6.svg</file>
+        <file>res/type7.svg</file>
+        <file>res/type8.svg</file>
+        <file>res/face_win.svg</file>
+        <file>res/nums_background.svg</file>
+        <file>res/mine_wrong.svg</file>
+    </qresource>
+</RCC>

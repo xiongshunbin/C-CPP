@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MineSweeper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MineSweeperData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="MineSweeper.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MineSweeperData.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\border_hor_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\border_vert_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\closed.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\corner_bottom_left_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\corner_bottom_right_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\corner_up_left_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\corner_up_right_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d-1.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d0.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d1.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d3.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d4.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d5.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d6.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d7.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d8.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\d9.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\face_lose.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\face_pressed.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\face_unpressed.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\face_win.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\flag.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\mine.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\mine_red.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\nums_background.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="resources.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="res\t_left_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\t_right_2x.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type0.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type1.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type3.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type4.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type5.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type6.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type7.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\type8.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
