@@ -36,5 +36,11 @@
     <ClCompile Include="conv_addr_win.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="echo_server_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="echo_client_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/icon.svg</file>
+        <file>resources/iconfont_titlebar.ttf</file>
+    </qresource>
+</RCC>
