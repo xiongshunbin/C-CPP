@@ -35,6 +35,7 @@ private:
 	QPushButton* BtnClose;
 
 	QWidget* MainWidget;
+	QWidget* FrameWidget;
 };
 
 

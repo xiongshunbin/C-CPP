@@ -1,12 +1,18 @@
 #include "FramelessWindow.h"
 #include <QDebug>
+#include <QDesktopWidget>
 
 FramelessWindow::FramelessWindow(QWidget* parent) : QWidget(parent)
 {
 	// 去掉标题栏
-	this->setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
+	this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
+	//this->setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
 
-	this->installEventFilter(this);
+	// 防止窗口的大小未及时恢复到正常值
+	setAttribute(Qt::WA_TranslucentBackground);
+
+	//this->installEventFilter(this);
+	setAttribute(Qt::WA_Hover);
 }
 
 void FramelessWindow::setTitleBarWidgets(QVector<QWidget*> widgets)
@@ -45,10 +51,12 @@ void FramelessWindow::mouseMoveEvent(QMouseEvent* event)
 	// 左键未按下
 	if (!LeftPressed)
 	{
+		/*
 		if (this->windowState().testFlag(Qt::WindowNoState))
 		{
 			setCursorShape(globalPos);
 		}
+		*/
 		return;
 	}
 	// 左键按下
@@ -107,10 +115,28 @@ void FramelessWindow::mouseMoveEvent(QMouseEvent* event)
 
 		this->setGeometry(rMove);
 	}
-	else if (LeftPressedInTitle)
+	else
 	{
 		// 在标题栏按下
-		this->move(WindowPos + event->globalPos() - PressedPos);
+		if (LeftPressedInTitle)
+		{
+			if (this->isMaximized())
+			{
+				// 窗口最大化时，鼠标拖动标题栏
+				// a.窗口恢复
+				double width_ratio = (double)event->pos().x() / width();
+				qDebug() << width();
+				this->setWindowState(Qt::WindowNoState);
+				// b.鼠标相对窗口的位置不变
+				qDebug() << rect().width();
+				int offset = width() * width_ratio;
+
+				WindowPos.setX(event->globalPos().x() - offset);
+				WindowPos.setY(0);
+			}
+			else
+				this->move(WindowPos + event->globalPos() - PressedPos);
+		}
 	}
 }
 
@@ -118,10 +144,33 @@ void FramelessWindow::mouseReleaseEvent(QMouseEvent* event)
 {
 	LeftPressed = false;
 	LeftPressedInTitle = false;
-	this->setCursor(QCursor(Qt::ArrowCursor));
+	//this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
+// 双击标题栏
+void FramelessWindow::mouseDoubleClickEvent(QMouseEvent* event)
+{
+	QWidget* doubleClickedWidget = QApplication::widgetAt(event->globalPos());
+	if (doubleClickedWidget)
+	{
+		bool inTitle = false;
+		foreach(QWidget * widget, TitleBarWidgets)
+		{
+			if (doubleClickedWidget == widget)
+			{
+				inTitle = true;
+				break;
+			}
+		}
 
+		if (inTitle)
+		{
+			this->setWindowState(isMaximized() ? Qt::WindowNoState : Qt::WindowMaximized);
+		}
+	}
+}
+
+# if 0
 void FramelessWindow::setAllWidgetsMouseTracking(QWidget* widget)
 {
 	widget->setMouseTracking(true);
@@ -156,6 +205,7 @@ bool FramelessWindow::eventFilter(QObject* watched, QEvent* event)
 	// 父类的实现就是return false，表示让事件接着传递。也就是传递给对应的控件
 	return QWidget::eventFilter(watched, event);
 }
+
 
 void FramelessWindow::setCursorShape(const QPoint& point)
 {
@@ -219,4 +269,62 @@ void FramelessWindow::setCursorShape(const QPoint& point)
 		hoverPos = Location::CENTER;
 		this->setCursor(QCursor(Qt::ArrowCursor));
 	}
+}
+#endif
+
+bool FramelessWindow::nativeEvent(const QByteArray& eventType, void* message, long* result)
+{
+	int m_nBorderWidth = 5;
+
+	MSG* param = static_cast<MSG*>(message);
+
+	switch (param->message)
+	{
+	case WM_NCHITTEST:
+	{
+		int nX = GET_X_LPARAM(param->lParam) - this->geometry().x();
+		int nY = GET_Y_LPARAM(param->lParam) - this->geometry().y();
+
+		// 当窗口最大化时，不允许鼠标拖动缩放，当鼠标拖动标题栏时，窗口恢复默认大小
+		if(windowState().testFlag(Qt::WindowMaximized))
+			return QWidget::nativeEvent(eventType, message, result);
+
+		if (nX > m_nBorderWidth && nX < this->width() - m_nBorderWidth &&
+			nY > m_nBorderWidth && nY < this->height() - m_nBorderWidth)
+		{
+			if (childAt(nX, nY) != nullptr)
+				return QWidget::nativeEvent(eventType, message, result);
+		}
+
+		if (nX > 0 && nX < m_nBorderWidth)
+			*result = HTLEFT;
+
+		if (nX > this->width() - m_nBorderWidth && nX < this->width())
+			*result = HTRIGHT;
+
+		if (nY > 0 && nY < m_nBorderWidth)
+			*result = HTTOP;
+
+		if (nY > this->height() - m_nBorderWidth && nY < this->height())
+			*result = HTBOTTOM;
+
+		if (nX > 0 && nX < m_nBorderWidth && nY > 0 && nY < m_nBorderWidth)
+			*result = HTTOPLEFT;
+
+		if (nX > this->width() - m_nBorderWidth && nX < this->width() &&
+			nY > 0 && nY < m_nBorderWidth)
+			*result = HTTOPRIGHT;
+
+		if (nX > 0 && nX < m_nBorderWidth &&
+			nY > this->height() - m_nBorderWidth && nY < this->height())
+			*result = HTBOTTOMLEFT;
+
+		if (nX > this->width() - m_nBorderWidth && nX < this->width() &&
+			nY > this->height() - m_nBorderWidth && nY < this->height())
+			*result = HTBOTTOMRIGHT;
+
+		return true;
+	}
+	}
+	return false;
 }

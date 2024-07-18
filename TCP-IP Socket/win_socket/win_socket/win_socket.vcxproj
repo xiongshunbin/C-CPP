@@ -135,6 +135,8 @@
     <ClCompile Include="hello_client_win.c" />
     <ClCompile Include="hello_server_win.c" />
     <ClCompile Include="inet_adrconv_win.c" />
+    <ClCompile Include="op_client_win.c" />
+    <ClCompile Include="op_server_win.c" />
     <ClCompile Include="tcp_client_win.c" />
     <ClCompile Include="tcp_server_win.c" />
   </ItemGroup>

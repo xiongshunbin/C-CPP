@@ -5,6 +5,8 @@
 #include <QVector>
 #include <QMouseEvent>
 #include <QApplication>
+#include <windowsx.h>
+#include <qt_windows.h>
 
 class FramelessWindow : public QWidget
 {
@@ -26,15 +28,20 @@ public:
 
 protected:
 	void setTitleBarWidgets(QVector<QWidget*> widgets);
+
 	void mousePressEvent(QMouseEvent* event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 	void mouseReleaseEvent(QMouseEvent* event) override;
+	void mouseDoubleClickEvent(QMouseEvent* event) override;
 
+#if 0
 	void setAllWidgetsMouseTracking(QWidget* widget);
 	bool eventFilter(QObject* watched, QEvent* event) override;
 
 	// 设置鼠标形状
 	void setCursorShape(const QPoint& point);
+#endif
+	bool nativeEvent(const QByteArray& eventType, void* message, long* result) override;
 
 private:
 	bool LeftPressed = false;					// 左键是否按下

@@ -52,17 +52,30 @@ void FramelessDemo::initForm()
     VLayout->setSpacing(0);
     VLayout->setMargin(0);
 
-    initTitleBar();
-    MainWidget = new QWidget(this);
+    // 嵌套一层QWidget，因为最底层的窗口要设置为窗口透明
+    FrameWidget = new QWidget(this);
+    FrameWidget->setObjectName("FrameWidget");
+    FrameWidget->setStyleSheet(R"(
+        #FrameWidget {
+            background-color: #f0f0f0;
+        }
+    )");
+    VLayout->addWidget(FrameWidget);
+    QVBoxLayout* frameVLayout = new QVBoxLayout(FrameWidget);
+    frameVLayout->setMargin(0);
+    frameVLayout->setSpacing(0);
 
-    VLayout->addWidget(TitleBar);
-    VLayout->addWidget(MainWidget);
+    initTitleBar();
+    MainWidget = new QWidget(FrameWidget);
+
+    frameVLayout->addWidget(TitleBar);
+    frameVLayout->addWidget(MainWidget);
 }
 
 void FramelessDemo::initTitleBar()
 {
 	// 设置标题栏和主体窗口
-	TitleBar = new QWidget(this);
+    TitleBar = new QWidget(FrameWidget);
     TitleBar->setFixedHeight(38);
 	TitleBar->setObjectName("TitleBar");
 	TitleBar->setStyleSheet(R"(

@@ -42,5 +42,11 @@
     <ClCompile Include="echo_client_win.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="op_client_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="op_server_win.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
