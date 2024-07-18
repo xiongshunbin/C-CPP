@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
         }
         // 调用calculate函数的同时传递待算数和运算符信息参数。
         result = calculate(opnd_cnt, (int *)opinfo, opinfo[recv_len - 1]);
-        write(clnt_sock, &result, sizeof(result)); // 向客户端传输calculate函数返回的运算结果。
+        write(clnt_sock, (char *)&result, sizeof(result)); // 向客户端传输calculate函数返回的运算结果。
         close(clnt_sock);
     }
     close(serv_sock);
