@@ -139,6 +139,8 @@
     <ClCompile Include="op_server_win.c" />
     <ClCompile Include="tcp_client_win.c" />
     <ClCompile Include="tcp_server_win.c" />
+    <ClCompile Include="uecho_client_win.c" />
+    <ClCompile Include="uecho_server_win.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
