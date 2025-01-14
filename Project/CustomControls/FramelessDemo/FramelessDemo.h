@@ -7,7 +7,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFontDatabase>
-#include  <QEvent>
+#include <QEvent>
 
 #include "FramelessWindow.h"
 

@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    serv_sock = socket(PF_INET, SOCK_STREAM, 0);        // è°ƒç”¨socketå‡½æ•°åˆ›å»ºå¥—æ¥å­—
+    serv_sock = socket(PF_INET, SOCK_STREAM, 0);        // µ÷ÓÃsocketº¯Êı´´½¨Ì×½Ó×Ö
     if(serv_sock == -1)
         error_handling("socket() error");
 
@@ -32,19 +32,19 @@ int main(int argc, char* argv[])
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(atoi(argv[1]));
 
-    if(bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)  // è°ƒç”¨bindå‡½æ•°åˆ†é…IPåœ°å€å’Œç«¯å£å·
+    if(bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)  // µ÷ÓÃbindº¯Êı·ÖÅäIPµØÖ·ºÍ¶Ë¿ÚºÅ
         error_handling("bind() error");
 
-    if(listen(serv_sock, 5) == -1)      // è°ƒç”¨listenå‡½æ•°å°†å¥—æ¥å­—è½¬ä¸ºå¯æ¥æ”¶è¿æ¥çŠ¶æ€
+    if(listen(serv_sock, 5) == -1)      // µ÷ÓÃlistenº¯Êı½«Ì×½Ó×Ö×ªÎª¿É½ÓÊÕÁ¬½Ó×´Ì¬
         error_handling("listen() error");
 
     clnt_addr_size = sizeof(clnt_addr);
-    // è°ƒç”¨acceptå‡½æ•°å—ç†è¿æ¥è¯·æ±‚ã€‚å¦‚æœåœ¨æ²¡æœ‰è¿æ¥è¯·æ±‚çš„æƒ…å†µä¸‹è°ƒç”¨è¯¥å‡½æ•°ï¼Œåˆ™ä¸ä¼šè¿”å›ï¼Œç›´åˆ°æœ‰è¿æ¥è¯·æ±‚ä¸ºæ­¢ã€‚
+    // µ÷ÓÃacceptº¯ÊıÊÜÀíÁ¬½ÓÇëÇó¡£Èç¹ûÔÚÃ»ÓĞÁ¬½ÓÇëÇóµÄÇé¿öÏÂµ÷ÓÃ¸Ãº¯Êı£¬Ôò²»»á·µ»Ø£¬Ö±µ½ÓĞÁ¬½ÓÇëÇóÎªÖ¹¡£
     clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);   
     if(clnt_sock == -1)
         error_handling("accept() error");
 
-    // writeå‡½æ•°ç”¨äºä¼ è¾“æ•°æ®ï¼Œè‹¥ç¨‹åºç»è¿‡ç¬¬43è¡Œä»£ç æ‰§è¡Œåˆ°æœ¬è¡Œï¼Œåˆ™è¯´æ˜å·²ç»æœ‰äº†è¿æ¥è¯·æ±‚ã€‚
+    // writeº¯ÊıÓÃÓÚ´«ÊäÊı¾İ£¬Èô³ÌĞò¾­¹ıµÚ43ĞĞ´úÂëÖ´ĞĞµ½±¾ĞĞ£¬ÔòËµÃ÷ÒÑ¾­ÓĞÁËÁ¬½ÓÇëÇó¡£
     write(clnt_sock, message, sizeof(message));
     close(clnt_sock);
     close(serv_sock);
