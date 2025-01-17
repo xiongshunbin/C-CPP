@@ -43,7 +43,7 @@ typedef struct ThreadPool
 } ThreadPool;
 
 // 创建线程池并初始化
-ThreadPool* threadPoolCreate(int min, int max, int queueSize);
+ThreadPool* threadPoolCreate(int min, int max, int qCapacity);
 
 // 销毁线程池
 int threadPoolDestroy(ThreadPool* pool);

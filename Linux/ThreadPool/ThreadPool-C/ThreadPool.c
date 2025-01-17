@@ -2,7 +2,7 @@
 
 const int NUMBER = 2;
 
-ThreadPool* threadPoolCreate(int min, int max, int queueSize)
+ThreadPool* threadPoolCreate(int min, int max, int qCapacity)
 {
 	ThreadPool* pool = (ThreadPool*)malloc(sizeof(ThreadPool));
 	do
@@ -35,13 +35,13 @@ ThreadPool* threadPoolCreate(int min, int max, int queueSize)
 		}
 
 		// 初始化任务队列
-		pool->taskQueue = (Task*)malloc(sizeof(Task) * queueSize);
+		pool->taskQueue = (Task*)malloc(sizeof(Task) * qCapacity);
 		if (pool->taskQueue == NULL)
 		{
 			printf("malloc taskQueue failed.\n");
 			break;
 		}
-		pool->queueCapacity = queueSize;
+		pool->queueCapacity = qCapacity;
 		pool->queueSize = 0;
 		pool->queueFront = 0;
 		pool->queueRear = 0;
