@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/epoll.h>
+#include <fcntl.h>
+#include <errno.h>
 
 int main()
 {
@@ -55,7 +57,7 @@ int main()
         exit(1);
     }
     struct epoll_event ev;
-    ev.events = EPOLLIN;
+    ev.events = EPOLLIN | EPOLLET;
     ev.data.fd = lfd;
     ret = epoll_ctl(epfd, EPOLL_CTL_ADD, lfd, &ev);
     if(ret == -1)
@@ -76,39 +78,57 @@ int main()
             if(fd == lfd)
             {
                 int cfd = accept(fd, NULL, NULL);
-                ev.events = EPOLLIN;
+                // 设置非阻塞属性
+                int flag = fcntl(cfd, F_GETFL);
+                flag |= O_NONBLOCK;
+                fcntl(cfd, F_SETFL, flag);
+                ev.events = EPOLLIN | EPOLLET;
                 ev.data.fd = cfd;
                 epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev);
             }
             else
             {
-                char buf[1024];
-                int len = recv(fd, buf, sizeof(buf), 0);
-                if(len == -1)
+                char buf[5];
+                while(1)
                 {
-                    perror("recv() error");
-                    exit(1);
-                }
-                else if(len == 0)
-                {
-                    printf("The client has disconnected......\n");
-                    epoll_ctl(epfd, EPOLL_CTL_DEL, fd, NULL);
-                    close(fd);
-                    break;
-                }
-                printf("read buf = %s\n", buf);
+                    int len = recv(fd, buf, sizeof(buf), 0);
+                    if(len == -1)
+                    {
+                        if(errno == EAGAIN)
+                        {
+                            printf("The data has been received completely......\n");
+                            break;
+                        }
+                        else
+                        {
+                            perror("recv() error");
+                            exit(1);
+                        }
+                    }
+                    else if(len == 0)
+                    {
+                        printf("The client has disconnected......\n");
+                        epoll_ctl(epfd, EPOLL_CTL_DEL, fd, NULL);
+                        close(fd);
+                        break;
+                    }
+                    write(STDOUT_FILENO, buf, len);
+                    printf("\n");
 
-                // 小写转大写
-                for(int j = 0; j < len ; j ++)
-                    buf[j] = toupper(buf[j]);
+                    // 小写转大写
+                    for(int j = 0; j < len ; j ++)
+                        buf[j] = toupper(buf[j]);
 
-                printf("after buf = %s\n", buf);
+                    // printf("after buf = %s\n", buf);
+                    write(STDOUT_FILENO, buf, len);
+                    printf("\n");
 
-                ret = send(fd, buf, strlen(buf) + 1, 0);
-                if(ret == -1)
-                {
-                    perror("send() error");
-                    exit(1);
+                    ret = send(fd, buf, strlen(buf) + 1, 0);
+                    if(ret == -1)
+                    {
+                        perror("send() error");
+                        exit(1);
+                    }
                 }
             }
         }
