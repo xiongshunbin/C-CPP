@@ -1,12 +1,82 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <ctype.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/epoll.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <pthread.h>
+
+typedef struct SockInfo{
+    int fd;
+    int epfd;
+}SockInfo;
+
+void* acceptConn(void* arg)
+{
+    printf("acceptConn tid: %ld\n", pthread_self());
+    SockInfo* info = (SockInfo*)arg;
+    int cfd = accept(info->fd, NULL, NULL);
+    // 设置非阻塞属性
+    int flag = fcntl(cfd, F_GETFL);
+    flag |= O_NONBLOCK;
+    fcntl(cfd, F_SETFL, flag);
+    struct epoll_event ev;
+    ev.events = EPOLLIN | EPOLLET;
+    ev.data.fd = cfd;
+    epoll_ctl(info->epfd, EPOLL_CTL_ADD, cfd, &ev);
+
+    free(info);
+
+    return NULL;
+}
+
+void* communication(void* arg)
+{
+    printf("communication tid: %ld\n", pthread_self());
+    SockInfo* info = (SockInfo*)arg;
+    char buf[5];
+    char temp[1024];
+    bzero(temp, sizeof(temp));
+    while(1)
+    {
+        int len = recv(info->fd, buf, sizeof(buf), 0);
+        if(len == -1)
+        {
+            if(errno == EAGAIN)
+            {
+                printf("The data has been received completely......\n");
+                int ret = send(info->fd, temp, strlen(temp) + 1, 0);
+                if(ret == -1)
+                    perror("send() error");
+            }
+            else
+                perror("recv() error");
+            break;
+        }
+        else if(len == 0)
+        {
+            printf("The client has disconnected......\n");
+            epoll_ctl(info->epfd, EPOLL_CTL_DEL, info->fd, NULL);
+            close(info->fd);
+            break;
+        }
+
+        // 小写转大写
+        for(int j = 0; j < len ; j ++)
+            buf[j] = toupper(buf[j]);
+        strncat(temp + strlen(temp), buf, len);
+
+        write(STDOUT_FILENO, buf, len);
+    }
+
+    free(info);
+
+    return NULL;
+}
 
 int main()
 {
@@ -72,65 +142,18 @@ int main()
     {
         int num = epoll_wait(epfd, evs, size, -1);
         printf("num = %d\n", num);
+        pthread_t tid;
         for(int i = 0; i < num; i ++)
         {
             int fd = evs[i].data.fd;
+            SockInfo* info = (SockInfo*)malloc(sizeof(SockInfo));
+            info->fd = fd;
+            info->epfd = epfd;
             if(fd == lfd)
-            {
-                int cfd = accept(fd, NULL, NULL);
-                // 设置非阻塞属性
-                int flag = fcntl(cfd, F_GETFL);
-                flag |= O_NONBLOCK;
-                fcntl(cfd, F_SETFL, flag);
-                ev.events = EPOLLIN | EPOLLET;
-                ev.data.fd = cfd;
-                epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev);
-            }
+                pthread_create(&tid, NULL, acceptConn, info);
             else
-            {
-                char buf[5];
-                while(1)
-                {
-                    int len = recv(fd, buf, sizeof(buf), 0);
-                    if(len == -1)
-                    {
-                        if(errno == EAGAIN)
-                        {
-                            printf("The data has been received completely......\n");
-                            break;
-                        }
-                        else
-                        {
-                            perror("recv() error");
-                            exit(1);
-                        }
-                    }
-                    else if(len == 0)
-                    {
-                        printf("The client has disconnected......\n");
-                        epoll_ctl(epfd, EPOLL_CTL_DEL, fd, NULL);
-                        close(fd);
-                        break;
-                    }
-                    write(STDOUT_FILENO, buf, len);
-                    printf("\n");
-
-                    // 小写转大写
-                    for(int j = 0; j < len ; j ++)
-                        buf[j] = toupper(buf[j]);
-
-                    // printf("after buf = %s\n", buf);
-                    write(STDOUT_FILENO, buf, len);
-                    printf("\n");
-
-                    ret = send(fd, buf, strlen(buf) + 1, 0);
-                    if(ret == -1)
-                    {
-                        perror("send() error");
-                        exit(1);
-                    }
-                }
-            }
+                pthread_create(&tid, NULL, communication, info);
+            pthread_detach(tid);
         }
     }
 

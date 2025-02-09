@@ -20,6 +20,7 @@ int main()
     addr.sin_family = AF_INET;
     addr.sin_port = htons(9999);
     inet_pton(AF_INET, "172.30.62.109", &addr.sin_addr.s_addr);
+
     int ret = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
     if(ret == -1)
     {
@@ -28,16 +29,17 @@ int main()
     }
 
     // 通信
-    while(1)
+    int num = 0;
+    char buf[1024];
+    while(num < 200)
     {
-        // 读数据
-        char recvBuf[1024];
-        fgets(recvBuf, sizeof(recvBuf), stdin);
-        ret = send(fd, recvBuf, strlen(recvBuf) + 1, 0);
+        sprintf(buf, "hello world, %d...\n", num ++);
+        printf("%s\n", buf);
+        ret = send(fd, buf, strlen(buf) + 1, 0);
 
-        memset(recvBuf, 0, sizeof(recvBuf));
+        memset(buf, 0, sizeof(buf));
 
-        int len = recv(fd, recvBuf, sizeof(recvBuf), 0);
+        int len = recv(fd, buf, sizeof(buf), 0);
         if(len == -1)
         {
             perror("recv() error");
@@ -48,9 +50,11 @@ int main()
             printf("The other party has already disconnected......\n");
             break;
         }
-        printf("recv buf: %s\n", recvBuf);
-        sleep(1);
+        printf("recv buf: %s\n", buf);
+        usleep(100000);
     }
+
+    printf("---------- Game Over ----------\n");
 
     // 关闭套接字
     close(fd);
