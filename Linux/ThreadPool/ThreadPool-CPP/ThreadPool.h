@@ -43,7 +43,7 @@ private:
 
 	static const int NUMBER = 2;
 
-	bool shutdown = false;			// 是否销毁线程池，销毁为true，不销毁为false
+	bool shutdown = false;		// 是否销毁线程池，销毁为true，不销毁为false
 };
 
 #endif // _THREADPOOL_H_
