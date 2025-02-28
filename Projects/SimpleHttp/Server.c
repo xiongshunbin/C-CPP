@@ -1,9 +1,14 @@
 #include "Server.h"
-
 #include <arpa/inet.h>
 #include <sys/epoll.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <strings.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <assert.h>
 
 int initListenFd(unsigned short port)
 {
@@ -86,14 +91,14 @@ int epollRun(int lfd)
 			else
 			{
 				// 数据通信，主要是接受对端发送的数据
-
+				recvHttpRequest(fd, epfd);
 
 			}
 
 		}
 	}
 
-
+	return 0;
 }
 
 int acceptClient(int lfd, int epfd)
@@ -120,6 +125,100 @@ int acceptClient(int lfd, int epfd)
 		perror("epoll_ctl");
 		return -1;
 	}
+
+	return 0;
+}
+
+int recvHttpRequest(int cfd, int epfd)
+{
+	int len = 0, total = 0;
+	char tmp[1024] = { 0 };
+	char buf[4096] = { 0 };
+	while (len = recv(cfd, tmp, sizeof tmp, 0) > 0)
+	{
+		if (total + len < sizeof buf)
+			memcpy(buf + total, tmp, len);
+		total += len;
+	}
+	// 判断数据是否被接收完毕
+	if (len == -1 && errno == EAGAIN)
+	{
+		// 解析请求行
+
+	}
+	else if (len = 0)
+	{
+		// 客户端断开了连接
+		int ret = epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, NULL);
+		if (ret == -1)
+		{
+			perror("epoll_ctl");
+			return -1;
+		}
+		close(cfd);
+	}
+	else
+	{
+		perror("recv");
+		return -1;
+	}
+	return 0;
+}
+
+int parseRequestLine(const char* line, int cfd)
+{
+	// 解析请求行 get /xxx/1.jpg http/1.1
+	char method[12];
+	char path[1024];
+	sscanf(line, "%[^ ] %[^ ]", method, path);
+	if (strcasecmp(method, "get") != 0)
+		return -1;
+	// 处理客户端请求的静态资源(目录 or 文件)
+	const char* file = NULL;
+	if (strcmpy(path, "/") == 0)
+		file = "./";
+	else
+		file = path + 1;
+	// 获取文件属性
+	struct stat st;
+	int ret = stat(file, &st);
+	if (ret == -1)
+	{
+		// 文件不存在 -- 回复404
+
+	}
+	// 判断文件类型
+	if (S_ISDIR(st.st_mode))
+	{
+		// 把本地目录中的内容发送给客户端
+
+	}
+	else
+	{
+		// 把文件的内容发送给客户端
+
+	}
+
+	return 0;
+}
+
+int sendFile(const char* fileName, int cfd)
+{
+	// 1. 打开文件
+	int fd = open(fileName, O_RDONLY);
+	assert(fd > 0);
+	// 2. 读取文件中的内容并发送到客户端
+	char buf[1024];
+	while (1)
+	{
+		int len = read(fd, buf, sizeof buf);
+		if (len > 0)
+		{
+			send(cfd, buf, len, 0);
+
+		}
+	}
+	
 
 	return 0;
 }

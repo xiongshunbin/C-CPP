@@ -8,3 +8,12 @@ int epollRun(int lfd);
 
 // 和客户端建立连接
 int acceptClient(int lfd, int epfd);
+
+// 接受Http请求消息
+int recvHttpRequest(int cfd, int epfd);
+
+// 解析请求行
+int parseRequestLine(const char* line, int cfd);
+
+// 发送文件
+int sendFile(const char* fileName, int cfd);
