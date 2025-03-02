@@ -9,6 +9,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <assert.h>
+#include <sys/sendfile.h>
+#include <dirent.h>
 
 int initListenFd(unsigned short port)
 {
@@ -185,18 +187,23 @@ int parseRequestLine(const char* line, int cfd)
 	if (ret == -1)
 	{
 		// 文件不存在 -- 回复404
-
+		sendHeadMsg(cfd, 404, "Not Found", getFileType(".html"), -1);
+		sendFile("404.html", cfd);
+		return 0;
 	}
 	// 判断文件类型
 	if (S_ISDIR(st.st_mode))
 	{
 		// 把本地目录中的内容发送给客户端
-
+		sendHeadMsg(cfd, 200, "OK", getFileType(".html"), -1);
+		sendDir(file, cfd);
+		
 	}
 	else
 	{
 		// 把文件的内容发送给客户端
-
+		sendHeadMsg(cfd, 200, "OK", getFileType(file), st.st_size);
+		sendFile(file, cfd);
 	}
 
 	return 0;
@@ -207,7 +214,8 @@ int sendFile(const char* fileName, int cfd)
 	// 1. 打开文件
 	int fd = open(fileName, O_RDONLY);
 	assert(fd > 0);
-	// 2. 读取文件中的内容并发送到客户端
+	// 2. 把文件中的内容发送到客户端
+#if 0
 	char buf[1024];
 	while (1)
 	{
@@ -215,10 +223,133 @@ int sendFile(const char* fileName, int cfd)
 		if (len > 0)
 		{
 			send(cfd, buf, len, 0);
-
+			usleep(10);	// 重要！！！
+		}
+		else if (len == 0)
+		{
+			break;
+		}
+		else
+		{
+			perror("read");
 		}
 	}
+#else
+	int size = lseek(fd, 0, SEEK_END);
+	sendfile(cfd, fd, NULL, size);
+#endif
 	
+	return 0;
+}
 
+int sendHeadMsg(int cfd, int status, const char* descr, const char* type, int length)
+{
+	// 状态行
+	char buf[4096] = { 0 };
+	sprintf(buf, "http/1.1 %d %s\r\n", status, descr);
+	// 响应头
+	sprintf(buf + strlen(buf), "content-type: %s\r\n", type);
+	sprintf(buf + strlen(buf), "content-length: %d\r\n\r\n", length);
+
+	int len = send(cfd, buf, strlen(buf), 0);
+	if (len == -1)
+	{
+		perror("send");
+		return -1;
+	}
+
+	return len;
+}
+
+const char* getFileType(const char* name)
+{
+	// a.jpg a.mp4 a.html
+	// 自右向左查找'.'字符，如果不存在返回NULL
+	const char* dot = strrchr(name, '.');
+	if (dot == NULL)
+		return "text/plain; charset=utf-8";	// 纯文本
+	if (strcmp(dot, ".html") == 0 || strcmp(dot, ".htm") == 0)
+		return "text/html; charset=utf-8";
+	if (strcmp(dot, ".jpg") == 0 || strcmp(dot, ".jpeg") == 0)
+		return "image/jpeg";
+	if (strcmp(dot, ".gif") == 0)
+		return "image/gif";
+	if (strcmp(dot, ".png") == 0)
+		return "image/png";
+	if (strcmp(dot, ".css") == 0)
+		return "text/css";
+	if (strcmp(dot, ".au") == 0)
+		return "audio/basic";
+	if (strcmp(dot, ".wav") == 0)
+		return "audio/wav";
+	if (strcmp(dot, ".avi") == 0)
+		return "video/x-msvideo";
+	if (strcmp(dot, ".mov") == 0 || strcmp(dot, ".qt") == 0)
+		return "video/quicktime";
+	if (strcmp(dot, ".mpeg") == 0 || strcmp(dot, ".mpe") == 0)
+		return "video/mpeg";
+	if (strcmp(dot, ".wrl") == 0)
+		return "model/vrml";
+	if (strcmp(dot, ".midi") == 0 || strcmp(dot, ".mid") == 0)
+		return "audio/midi";
+	if (strcmp(dot, ".mp3") == 0)
+		return "audio/mp3";
+	if (strcmp(dot, ".json") == 0)
+		return "application/json";
+	if (strcmp(dot, ".pdf") == 0)
+		return "application/pdf";
+
+	return "text/plain; charset=utf-8";	// 纯文本
+}
+
+/*
+<html>
+	<head>
+		<title>test</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</body>
+</html>
+*/
+int sendDir(const char* dirName, int cfd)
+{
+	char buf[4096] = { 0 };
+	sprintf(buf, "<html><head><title>%s</title></head><body><table>", dirName);
+	struct dirent** namelist;
+	int num = scandir(dirName, &namelist, NULL, alphasort);
+	for (int i = 0; i < num; i++)
+	{
+		// 取出文件名 namelist 指向的是一个指针数组 struct durent* tmp[]
+		const char* name = namelist[i]->d_name;
+		struct stat st;
+		char subPath[1024] = { 0 };
+		sprintf(subPath, "%s/%s", dirName, name);
+		stat(subPath, &st);
+		if (S_ISDIR(st.st_mode))
+		{
+			// a标签 <a href="">name</a>
+			sprintf(buf + strlen(buf), "<tr><td><a href=\"%s/\">%s</a></td><td>%ld</td></tr>", name, name, st.st_size);
+		}
+		else
+		{
+			sprintf(buf + strlen(buf), "<tr><td><a href=\"%s\">%s</a></td><td>%ld</td></tr>", name, name, st.st_size);
+		}
+		send(cfd, buf, strlen(buf), 0);
+		memset(buf, 0, sizeof(buf));
+		free(namelist[i]);
+	}
+	sprintf(buf, "</table></body></html>");
+	send(cfd, buf, strlen(buf), 0);
+	free(namelist);
 	return 0;
 }
