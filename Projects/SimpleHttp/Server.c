@@ -11,6 +11,15 @@
 #include <assert.h>
 #include <sys/sendfile.h>
 #include <dirent.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <pthread.h>
+
+struct FdInfo {
+	int fd;
+	int epfd;
+	pthread_t tid;
+};
 
 int initListenFd(unsigned short port)
 {
@@ -84,17 +93,21 @@ int epollRun(int lfd)
 		int nfds = epoll_wait(epfd, evs, sizeof maxevs, -1);
 		for (int i = 0; i < nfds; i++)
 		{
+			struct FdInfo* info = (struct FdInfo*)malloc(sizeof(struct FdInfo));
 			int fd = evs[i].data.fd;
+			info->epfd = epfd;
+			info->fd = fd;
 			if (fd == lfd)
 			{
 				// 建立新连接
-				acceptClient(lfd, epfd);
+				// acceptClient(lfd, epfd);
+				pthread_create(&info->tid, NULL, acceptClient, info);
 			}
 			else
 			{
 				// 数据通信，主要是接受对端发送的数据
-				recvHttpRequest(fd, epfd);
-
+				// recvHttpRequest(fd, epfd);
+				pthread_create(&info->tid, NULL, recvHttpRequest, info);
 			}
 
 		}
@@ -103,40 +116,44 @@ int epollRun(int lfd)
 	return 0;
 }
 
-int acceptClient(int lfd, int epfd)
+void* acceptClient(void* arg)
 {
+	struct FdInfo* info = (struct FdInfo*)arg;
 	// 1. 建立连接
-	int cfd = accept(lfd, NULL, NULL);
+	int cfd = accept(info->fd, NULL, NULL);
 	if (cfd == -1)
 	{
 		perror("accept");
-		return -1;
+		return NULL;
 	}
 	// 2. 设置非阻塞
 	int flag = fcntl(cfd, F_GETFL);
 	flag |= O_NONBLOCK;
-	fcnt(cfd, F_SETFL, flag);
+	fcntl(cfd, F_SETFL, flag);
 
 	// 3. cfd添加到epoll树
 	struct epoll_event ev;
 	ev.events = EPOLLIN | EPOLLET;
 	ev.data.fd = cfd;
-	int ret = epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev);
+	int ret = epoll_ctl(info->epfd, EPOLL_CTL_ADD, cfd, &ev);
 	if (ret == -1)
 	{
 		perror("epoll_ctl");
-		return -1;
+		return NULL;
 	}
-
-	return 0;
+	printf("acceptClnt thread ID: %ld\n", info->tid);
+	free(info);
+	return NULL;
 }
 
-int recvHttpRequest(int cfd, int epfd)
+void* recvHttpRequest(void* arg)
 {
+	struct FdInfo* info = (struct FdInfo*)arg;
+	printf("Start receiving data......\n");
 	int len = 0, total = 0;
 	char tmp[1024] = { 0 };
 	char buf[4096] = { 0 };
-	while (len = recv(cfd, tmp, sizeof tmp, 0) > 0)
+	while ((len = recv(info->fd, tmp, sizeof tmp, 0)) > 0)
 	{
 		if (total + len < sizeof buf)
 			memcpy(buf + total, tmp, len);
@@ -146,25 +163,25 @@ int recvHttpRequest(int cfd, int epfd)
 	if (len == -1 && errno == EAGAIN)
 	{
 		// 解析请求行
-
+		char* pt = strstr(buf, "\r\n");
+		int reqLen = pt - buf;
+		buf[reqLen] = '\0';
+		parseRequestLine(buf, info->fd);
 	}
-	else if (len = 0)
+	else if (len == 0)
 	{
 		// 客户端断开了连接
-		int ret = epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, NULL);
-		if (ret == -1)
-		{
-			perror("epoll_ctl");
-			return -1;
-		}
-		close(cfd);
+		epoll_ctl(info->epfd, EPOLL_CTL_DEL, info->fd, NULL);
+		close(info->fd);
 	}
 	else
 	{
 		perror("recv");
-		return -1;
 	}
-	return 0;
+	printf("recvMsg thread ID: %ld\n", info->tid);
+	close(info->fd);
+	free(info);
+	return NULL;
 }
 
 int parseRequestLine(const char* line, int cfd)
@@ -173,11 +190,13 @@ int parseRequestLine(const char* line, int cfd)
 	char method[12];
 	char path[1024];
 	sscanf(line, "%[^ ] %[^ ]", method, path);
+	printf("method: %s, path: %s\n", method, path);
 	if (strcasecmp(method, "get") != 0)
 		return -1;
+	decodeMsg(path, path);
 	// 处理客户端请求的静态资源(目录 or 文件)
 	const char* file = NULL;
-	if (strcmpy(path, "/") == 0)
+	if (strcmp(path, "/") == 0)
 		file = "./";
 	else
 		file = path + 1;
@@ -197,7 +216,6 @@ int parseRequestLine(const char* line, int cfd)
 		// 把本地目录中的内容发送给客户端
 		sendHeadMsg(cfd, 200, "OK", getFileType(".html"), -1);
 		sendDir(file, cfd);
-		
 	}
 	else
 	{
@@ -216,9 +234,9 @@ int sendFile(const char* fileName, int cfd)
 	assert(fd > 0);
 	// 2. 把文件中的内容发送到客户端
 #if 0
-	char buf[1024];
 	while (1)
 	{
+		char buf[1024];
 		int len = read(fd, buf, sizeof buf);
 		if (len > 0)
 		{
@@ -235,10 +253,20 @@ int sendFile(const char* fileName, int cfd)
 		}
 	}
 #else
+	off_t offset = 0;
 	int size = lseek(fd, 0, SEEK_END);
-	sendfile(cfd, fd, NULL, size);
+	lseek(fd, 0, SEEK_SET);
+	while (offset < size)
+	{
+		int ret = sendfile(cfd, fd, &offset, size - offset);
+		printf("ret value: %d\n", ret);
+		if (ret == -1 && errno == EAGAIN)
+		{
+			printf("There's no data......\n");
+		}
+	}
 #endif
-	
+	close(fd);
 	return 0;
 }
 
@@ -352,4 +380,41 @@ int sendDir(const char* dirName, int cfd)
 	send(cfd, buf, strlen(buf), 0);
 	free(namelist);
 	return 0;
+}
+
+int hexToDec(char c)
+{
+	if (c >= '0' && c <= '9')
+		return c - '0';
+	if (c >= 'a' && c <= 'f')
+		return c - 'a' + 10;
+	if (c >= 'A' && c <= 'F')
+		return c - 'A' + 10;
+
+	return 0;
+}
+
+void decodeMsg(char* to, char* from)
+{
+	for (; *from != '\0'; ++to, ++from)
+	{
+		// isxdigit -> 判断字符是不是16进制格式，取值在 0-f
+		// Linux%E5%86%85%E6%A0%B8.jpg
+		if (from[0] == '%' && isxdigit(from[1]) && isxdigit(from[2]))
+		{
+			// 将16进制的数 -> 十进制 将这个数值赋值给了字符 int -> char
+			// B2 == 178
+			// 将3个字符，变成了一个字符，这个字符就是原始数据
+			*to = hexToDec(from[1]) * 16 + hexToDec(from[2]);
+
+			// 跳过 from[1] 和 from[2]， 因为在当前循环中已经处理过了
+			from += 2;
+		}
+		else
+		{
+			// 字符拷贝，赋值
+			*to = *from;
+		}
+	}
+	*to = '\0';
 }

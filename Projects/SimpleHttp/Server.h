@@ -7,10 +7,12 @@ int initListenFd(unsigned short port);
 int epollRun(int lfd);
 
 // 和客户端建立连接
-int acceptClient(int lfd, int epfd);
+// int acceptClient(int lfd, int epfd);
+void* acceptClient(void* arg);
 
 // 接受Http请求消息
-int recvHttpRequest(int cfd, int epfd);
+// int recvHttpRequest(int cfd, int epfd);
+void* recvHttpRequest(void* arg);
 
 // 解析请求行
 int parseRequestLine(const char* line, int cfd);
@@ -26,3 +28,9 @@ const char* getFileType(const char* name);
 
 // 发送目录
 int sendDir(const char* dirName, int cfd);
+
+// 将字符转换为整形数
+int hexToDec(char c);
+
+// 解码，to 中存储解码之后的数据，传出参数，from 中存储被解码的数据，传入参数
+void decodeMsg(char* to, char* from);
