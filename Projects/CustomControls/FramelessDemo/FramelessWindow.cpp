@@ -5,8 +5,8 @@
 FramelessWindow::FramelessWindow(QWidget* parent) : QWidget(parent)
 {
 	// 去掉标题栏
-	this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
-	//this->setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
+	//this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint);
+	this->setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
 
 	// 防止窗口的大小未及时恢复到正常值
 	setAttribute(Qt::WA_TranslucentBackground);
