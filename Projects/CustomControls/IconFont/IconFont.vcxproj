@@ -93,8 +93,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="IconFont.qrc" />
-    <QtMoc Include="IconFont.h" />
-    <ClCompile Include="IconFont.cpp" />
+    <QtMoc Include="Widget.h" />
+    <ClCompile Include="Widget.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

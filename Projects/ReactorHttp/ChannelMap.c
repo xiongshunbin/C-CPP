@@ -8,6 +8,7 @@ struct ChannelMap* channelMapInit(int size)
 {
 	struct ChannelMap* map = (struct ChannelMap*)malloc(sizeof(struct ChannelMap));
 	map->list = (struct Channel**)malloc(size * sizeof(struct Channel*));
+	memset(map->list, 0, size * sizeof(struct Channel*));
 	map->size = size;
 	return map;
 }
@@ -16,7 +17,7 @@ void channelMapClear(struct ChannelMap* map)
 {
 	if (map != NULL)
 	{
-		for (int i = 0; i < map->size; i++)
+		for (int i = 0; i < map->size; ++i)
 		{
 			if (map->list[i] != NULL)
 				free(map->list[i]);

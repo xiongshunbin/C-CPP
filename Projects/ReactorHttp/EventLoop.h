@@ -37,6 +37,7 @@ struct EventLoop
 	pthread_t threadID;					// 线程ID
 	char threadName[32];				// 线程名字
 	pthread_mutex_t mutex;				// 互斥访问任务队列
+	int socketPair[2];					// 存储本地通信的文件描述符, 通过socketpair初始化
 };
 
 
@@ -49,3 +50,17 @@ int eventLoopRun(struct EventLoop* evLoop);
 
 // 处理被激活的文件描述符fd
 int eventActivate(struct EventLoop* evLoop, int fd, int events);
+
+// 添加任务到任务队列
+int eventLoopAddTask(struct EventLoop* evLoop, struct Channel* channel, int type);
+
+// 处理任务队列中的任务
+int eventLoopProcessTask(struct EventLoop* evLoop);
+
+// 处理dispatcher中的节点
+int eventLoopAdd(struct EventLoop* evLoop, struct Channel* channel);
+int eventLoopRemove(struct EventLoop* evLoop, struct Channel* channel);
+int eventLoopModify(struct EventLoop* evLoop, struct Channel* channel);
+
+// 释放channel
+int destroyChannel(struct EventLoop* evLoop, struct Channel* channel);

@@ -26,10 +26,10 @@
     <QtRcc Include="IconFont.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtMoc Include="IconFont.h">
+    <QtMoc Include="Widget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClCompile Include="IconFont.cpp">
+    <ClCompile Include="Widget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
