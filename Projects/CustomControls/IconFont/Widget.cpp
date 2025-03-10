@@ -1,4 +1,7 @@
 #include "Widget.h"
+#include "IconHelper.h"
+#include <QDebug>
+#include <QFontDatabase>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -87,8 +90,26 @@ Widget::Widget(QWidget *parent)
 
     vLayout->addWidget(scrollArea);
 
-    // FontAwesome4
+    // 默认选中 FontAwesome4
     radioGroup->button(0)->click();
+
+    IconHelper::getInstance();
+
+    // 打印系统中支持的字体
+    QFontDatabase database;
+    foreach(QString family, database.families())
+    {
+        qDebug() << family;
+        foreach(QString strStyle, database.styles(family))
+        {
+            QString strSizes;
+            foreach(int point, database.smoothSizes(family, strStyle))
+            {
+                strSizes += QString::number(point) + " ";
+            }
+            qDebug() << "\t" << strStyle << "\t" << strSizes;
+        }
+    }
 }
 
 Widget::~Widget()
