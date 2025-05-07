@@ -36,7 +36,7 @@ int acceptConn(int lfd, struct sockaddr_in* addr)
 		cfd = accept(lfd, NULL, NULL);
 	else
 	{
-		int addrLen = sizeof(struct sockaddr_in);
+		socklen_t addrLen = sizeof(struct sockaddr_in);
 		cfd = accept(lfd, (struct sockaddr*)addr, &addrLen);
 	}
 	if (cfd == -1)

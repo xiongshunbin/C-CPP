@@ -1,9 +1,10 @@
 #include <iostream>
 #include "Array.h"
 #include "SharedPtr.h"
+#include "Virtual.h"
 
 int main()
 {
-	testArray();
+	testVirtual();
 	return 0;
 }

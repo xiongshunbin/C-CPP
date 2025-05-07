@@ -100,59 +100,48 @@ QList<int> IconHelper::getAlibabaIcons()
 	QList<int> list;
 
 	// 图表
-	for (int i = 0xa000; i <= 0xa027; i++) {
+	for (int i = 0xa000; i <= 0xa027; i++)
 		list.append(i);
-	}
 
 	// 仪表盘
-	for (int i = 0xa100; i <= 0xa106; i++) {
+	for (int i = 0xa100; i <= 0xa106; i++) 
 		list.append(i);
-	}
 
 	// 表格
-	for (int i = 0xa200; i <= 0xa20e; i++) {
+	for (int i = 0xa200; i <= 0xa20e; i++) 
 		list.append(i);
-	}
 
 	// 日历
-	for (int i = 0xa300; i <= 0xa30b; i++) {
+	for (int i = 0xa300; i <= 0xa30b; i++) 
 		list.append(i);
-	}
 
 	//  树状图
-	for (int i = 0xa400; i <= 0xa402; i++) {
+	for (int i = 0xa400; i <= 0xa402; i++)
 		list.append(i);
-	}
 
 	// 标签页
-	for (int i = 0xa500; i <= 0xa505; i++) {
+	for (int i = 0xa500; i <= 0xa505; i++)
 		list.append(i);
-	}
 
 	// 最大化最小化
-	for (int i = 0xa600; i <= 0xa603; i++) {
+	for (int i = 0xa600; i <= 0xa603; i++)
 		list.append(i);
-	}
 
 	// 文本编辑器
-	for (int i = 0xa700; i <= 0xa70a; i++) {
+	for (int i = 0xa700; i <= 0xa70a; i++)
 		list.append(i);
-	}
 
 	// 加号
-	for (int i = 0xa900; i <= 0xa901; i++) {
+	for (int i = 0xa900; i <= 0xa901; i++)
 		list.append(i);
-	}
 
 	// 天气
-	for (int i = 0xaa00; i <= 0xaa0e; i++) {
+	for (int i = 0xaa00; i <= 0xaa0e; i++)
 		list.append(i);
-	}
 
 	// 换肤
-	for (int i = 0xab00; i <= 0xab03; i++) {
+	for (int i = 0xab00; i <= 0xab03; i++)
 		list.append(i);
-	}
 
 	return list;
 }
