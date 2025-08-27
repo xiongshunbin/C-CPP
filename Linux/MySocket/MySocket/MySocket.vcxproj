@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -35,14 +35,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{be85b632-cd02-41ae-9a7d-de221dad2243}</ProjectGuid>
+    <ProjectGuid>{d67476ea-d23a-4dbc-ae81-8f0903720781}</ProjectGuid>
     <Keyword>Linux</Keyword>
-    <RootNamespace>ReactorHttp</RootNamespace>
+    <RootNamespace>MySocket</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
     <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
-    <LinuxProjectType>{2238F9CD-F817-4ECC-BD14-2524D2669B35}</LinuxProjectType>
+    <LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
@@ -75,27 +75,11 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="Buffer.c" />
-    <ClCompile Include="Channel.c" />
-    <ClCompile Include="ChannelMap.c" />
-    <ClCompile Include="EpollDispatcher.c" />
-    <ClCompile Include="EventLoop.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="PollDispatcher.c" />
-    <ClCompile Include="SelectDispatcher.c" />
-    <ClCompile Include="TcpServer.c" />
-    <ClCompile Include="ThreadPool.c" />
-    <ClCompile Include="WorkerThread.c" />
+    <ClCompile Include="client.c" />
+    <ClCompile Include="socket.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Buffer.h" />
-    <ClInclude Include="Channel.h" />
-    <ClInclude Include="ChannelMap.h" />
-    <ClInclude Include="Dispatcher.h" />
-    <ClInclude Include="EventLoop.h" />
-    <ClInclude Include="TcpServer.h" />
-    <ClInclude Include="ThreadPool.h" />
-    <ClInclude Include="WorkerThread.h" />
+    <ClInclude Include="socket.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

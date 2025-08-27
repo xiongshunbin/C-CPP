@@ -29,5 +29,8 @@
     <ClInclude Include="Virtual.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Emplace_back.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

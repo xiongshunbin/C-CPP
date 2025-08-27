@@ -2,9 +2,10 @@
 #include "Array.h"
 #include "SharedPtr.h"
 #include "Virtual.h"
+#include "Emplace_back.h"
 
 int main()
 {
-	testVirtual();
+	testEmplace_back();
 	return 0;
 }

@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Array.h" />
+    <ClInclude Include="Emplace_back.h" />
     <ClInclude Include="SharedPtr.h" />
     <ClInclude Include="Virtual.h" />
   </ItemGroup>
