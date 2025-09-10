@@ -124,3 +124,18 @@ int bufferSocketRead(struct Buffer* buffer, int fd)
 	return result;
 }
 
+char* bufferFindCRLF(struct Buffer* buffer)
+{
+	/**
+	 * 1.strstr --> 大字符串中匹配子字符串(遇到\0结束)
+	 *		char *strstr(const char *haystack, const char *needle);
+	 * 
+	 * 2.memmem --> 大数据块中匹配子数据块(需要指定数据块的大小)
+	 *		void *memmem(const void *haystack, size_t haystacklen,
+	 *				const void *needle, size_t needlelen);
+	 */
+	char* ptr = memmem(buffer->data + buffer->readPos, bufferReadableSize(buffer), "\r\n", 2);
+
+	return ptr;
+}
+

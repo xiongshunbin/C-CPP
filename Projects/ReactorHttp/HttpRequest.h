@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Buffer.h"
+#include <stdbool.h>
+
 // 请求头键值对
 struct RequestHeader
 {
@@ -43,3 +46,9 @@ void httpRequestAddHeader(struct HttpRequest* request, const char* key, const ch
 
 // 根据key得到请求头的value
 char* httpRequestGetHeader(struct HttpRequest* request, const char* key);
+
+// 解析请求行
+bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf);
+
+// 解析请求头
+bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf);
