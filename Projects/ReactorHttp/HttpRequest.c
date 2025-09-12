@@ -185,16 +185,58 @@ bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf)
 			readBuf->readPos += strlen("\r\n");
 
 			// 修改解析状态
-			if (strncasecmp(request->method, "GET", strlen("GET")))
-			{
-				request->curState = ParseReqDone;
-			}
-			else if (strncasecmp(request->method, "POST", strlen("POST")))
+			if (strcasecmp(request->method, "POST") == 0)
 			{
 				request->curState = ParseReqBody;
+			}
+			else
+			{
+				request->curState = ParseReqDone;
 			}
 		}
 		return true;
 	}
+	return false;
+}
+
+bool parseHttpRequest(struct HttpRequest* request, struct Buffer* readBuf)
+{
+	bool flag = true;
+	while (request->curState != ParseReqDone)
+	{
+		switch (request->curState)
+		{
+		case ParseReqLine:
+			flag = parseHttpRequestLine(request, readBuf);
+			break;
+		case ParseReqHeaders:
+			flag = parseHttpRequestHeader(request, readBuf);
+			break;
+		case ParseReqBody:
+			break;
+		default:
+			break;
+		}
+
+		if (!flag)
+		{
+			return false;
+		}
+
+		// 判断是否解析完毕, 如果完毕, 需要准备回复的数据
+		if (request->curState == ParseReqDone)
+		{
+			// 1.根据解析出的原始数据, 对客户端的请求做出处理
+
+			// 2.组织响应数据并发送给客户端
+		}
+	}
+	request->curState = ParseReqLine;	// 状态还原, 保证还能继续处理第二条及以后的请求
+	return flag;
+}
+
+bool processHttpRequest(struct HttpRequest* request)
+{
+	// 处理基于GET的HTTP请求
 	return false;
 }

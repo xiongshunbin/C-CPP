@@ -52,3 +52,9 @@ bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf);
 
 // 解析请求头
 bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf);
+
+// 解析HTTP请求协议
+bool parseHttpRequest(struct HttpRequest* request, struct Buffer* readBuf);
+
+// 处理HTTP请求协议
+bool processHttpRequest(struct HttpRequest* request);
