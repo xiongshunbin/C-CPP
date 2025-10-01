@@ -2,6 +2,7 @@
 
 #include "Buffer.h"
 #include <stdbool.h>
+#include "HttpResponse.h"
 
 // 请求头键值对
 struct RequestHeader
@@ -54,7 +55,14 @@ bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf);
 bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf);
 
 // 解析HTTP请求协议
-bool parseHttpRequest(struct HttpRequest* request, struct Buffer* readBuf);
+bool parseHttpRequest(struct HttpRequest* request, struct Buffer* readBuf, 
+	struct HttpResponse* response, struct Buffer* sendBuf, int socketFd);
 
 // 处理HTTP请求协议
-bool processHttpRequest(struct HttpRequest* request);
+int processHttpRequest(struct HttpRequest* request, struct HttpResponse* response);
+
+// 解码字符串
+void decodeMsg(char* to, char* from);
+
+// 根据文件名获取文件类型
+const char* getFileType(const char* name);

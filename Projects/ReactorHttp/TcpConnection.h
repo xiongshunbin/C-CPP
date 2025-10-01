@@ -3,6 +3,8 @@
 #include "EventLoop.h"
 #include "Buffer.h"
 #include "Channel.h"
+#include "HttpRequest.h"
+#include "HttpResponse.h"
 
 struct TcpConnection
 {
@@ -11,6 +13,9 @@ struct TcpConnection
 	struct Buffer* readBuf;
 	struct Buffer* writeBuf;
 	char name[32];
+	// http 协议
+	struct HttpRequest* request;
+	struct HttpResponse* response;
 };
 
 // 初始化
