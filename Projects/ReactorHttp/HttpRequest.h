@@ -66,3 +66,9 @@ void decodeMsg(char* to, char* from);
 
 // 根据文件名获取文件类型
 const char* getFileType(const char* name);
+
+// 发送目录
+void sendDir(const char* dirName, struct Buffer* sendBuf, int cfd);
+
+// 发送文件
+void sendFile(const char* fileName, struct Buffer* sendBuf, int cfd);

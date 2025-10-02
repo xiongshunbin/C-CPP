@@ -6,6 +6,8 @@
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 
+#define MSG_SEND_AUTO
+
 struct TcpConnection
 {
 	struct EventLoop* evLoop;
@@ -21,3 +23,5 @@ struct TcpConnection
 // ³õÊ¼»¯
 struct TcpConnection* tcpConnectionInit(int fd, struct EventLoop* evLoop);
 
+// Ïú»Ù
+int tcpConnectionDestroy(void* arg);

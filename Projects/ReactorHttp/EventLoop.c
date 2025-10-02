@@ -19,7 +19,7 @@ void taskWakeup(struct EventLoop* evLoop)
 }
 
 // 读数据, 子线程检测的evLoop->socketPair[1]触发读事件，线程解除阻塞
-void readLocalMessage(void* arg)
+int readLocalMessage(void* arg)
 {
 	struct EventLoop* evLoop = (struct EventLoop*)arg;
 	char buf[256];
@@ -47,7 +47,7 @@ struct EventLoop* eventLoopInitEx(const char* threadName)
 		exit(0);
 	}
 	// 指定规则: evLoop->socketPair[0] 发送数据, evLoop->socketPair[1] 接收数据
-	struct Channel* channel = channelInit(evLoop->socketPair[1], ReadEvent, readLocalMessage, NULL, evLoop);
+	struct Channel* channel = channelInit(evLoop->socketPair[1], ReadEvent, readLocalMessage, NULL, NULL, evLoop);
 	// 把 channel 添加到任务队列
 	eventLoopAddTask(evLoop, channel, ADD);
 	return evLoop;

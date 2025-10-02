@@ -1,8 +1,11 @@
+#define _GNU_SOURCE
 #include "Buffer.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/uio.h>
+#include <unistd.h>
+#include <sys/socket.h>
 
 struct Buffer* bufferInit(int size)
 {
@@ -134,8 +137,25 @@ char* bufferFindCRLF(struct Buffer* buffer)
 	 *		void *memmem(const void *haystack, size_t haystacklen,
 	 *				const void *needle, size_t needlelen);
 	 */
-	char* ptr = memmem(buffer->data + buffer->readPos, bufferReadableSize(buffer), "\r\n", 2);
+	char* ptr = (char*)memmem(buffer->data + buffer->readPos, bufferReadableSize(buffer), "\r\n", 2);
 
 	return ptr;
+}
+
+int bufferSendData(struct Buffer* buffer, int fd)
+{
+	// 判断有无数据
+	int readable = bufferReadableSize(buffer);
+	if (readable > 0)
+	{
+		int count = send(fd, buffer->data + buffer->readPos, readable, 0);
+		if (count > 0)
+		{
+			buffer->readPos += count;
+			usleep(1);
+		}
+		return count;
+	}
+	return 0;
 }
 

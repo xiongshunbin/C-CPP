@@ -1,6 +1,7 @@
 #include "Dispatcher.h"
 #include <sys/select.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define Max 1024
 
@@ -47,6 +48,8 @@ static int selectRemove(struct Channel* channel, struct EventLoop* evLoop)
 {
 	struct SelectData* data = (struct SelectData*)(evLoop->dispatcherData);
 	clearFdSet(channel, data);
+	// 通过 Channel 释放对应的 TcpConnection 资源
+	channel->destroyCallback(channel->arg);
 	return 0;
 }
 
@@ -97,6 +100,7 @@ static int selectClean(struct EventLoop* evLoop)
 {
 	struct SelectData* data = (struct SelectData*)(evLoop->dispatcherData);
 	free(data);
+	return 0;
 }
 
 struct Dispatcher SelectDispatcher = {

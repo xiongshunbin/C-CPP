@@ -19,11 +19,12 @@ struct Channel
 	int events;					// 事件
 	handleFunc readCallback;	// 读回调
 	handleFunc writeCallback;	// 写回调
+	handleFunc destroyCallback;
 	void* arg;					// 回调函数的参数
 };
 
 // 初始化Channel
-struct Channel* channelInit(int fd, int events, handleFunc readFunc, handleFunc writeFunc, void* arg);
+struct Channel* channelInit(int fd, int events, handleFunc readFunc, handleFunc writeFunc, handleFunc destroyFunc, void* arg);
 
 // 修改fd的写事件(检测 or 不检测)
 void writeEventEnable(struct Channel* channel, bool flag);

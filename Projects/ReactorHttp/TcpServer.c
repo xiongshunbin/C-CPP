@@ -22,6 +22,7 @@ struct Listener* listenerInit(unsigned short port)
 	if (lfd == -1)
 	{
 		perror("socket");
+		return NULL;
 	}
 
 	// 2.设置端口复用
@@ -30,6 +31,7 @@ struct Listener* listenerInit(unsigned short port)
 	if (ret == -1)
 	{
 		perror("setsockopt");
+		return NULL;
 	}
 
 	// 3.绑定IP地址和端口号
@@ -41,6 +43,7 @@ struct Listener* listenerInit(unsigned short port)
 	if (ret == -1)
 	{
 		perror("bind");
+		return NULL;
 	}
 
 	// 4.设置监听
@@ -48,6 +51,7 @@ struct Listener* listenerInit(unsigned short port)
 	if (ret == -1)
 	{
 		perror("listen");
+		return NULL;
 	}
 
 	// 5. 返回
@@ -65,6 +69,7 @@ int acceptConnection(void* arg)
 	struct EventLoop* evLoop = takeWorkerEventLoop(server->threadPool);
 	// 将 cfd 放到 TcpConnection 中处理
 	tcpConnectionInit(cfd, evLoop);
+	return 0;
 }
 
 void tcpServerRun(struct TcpServer* server)
@@ -73,7 +78,7 @@ void tcpServerRun(struct TcpServer* server)
 	threadPoolRun(server->threadPool);
 	// 添加检测的任务
 	// 初始化一个channel实例
-	struct Channel* channel = channelInit(server->listener->lfd, ReadEvent, acceptConnection, NULL, server);
+	struct Channel* channel = channelInit(server->listener->lfd, ReadEvent, acceptConnection, NULL, NULL, server);
 	eventLoopAddTask(server->mainLoop, channel, ADD);
 	// 启动反应堆模型
 	eventLoopRun(server->mainLoop);

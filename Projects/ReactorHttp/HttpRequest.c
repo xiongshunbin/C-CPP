@@ -1,4 +1,6 @@
+#define _GNU_SOURCE
 #include "HttpRequest.h"
+#include "TcpConnection.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
@@ -64,8 +66,8 @@ void httpRequestAddHeader(struct HttpRequest* request, const char* key, const ch
 {
 	if (request->reqHeadersNum < HeaderSize)
 	{
-		request->reqHeaders[request->reqHeadersNum].key = key;
-		request->reqHeaders[request->reqHeadersNum].value = value;
+		request->reqHeaders[request->reqHeadersNum].key = (char*)key;
+		request->reqHeaders[request->reqHeadersNum].value = (char*)value;
 		request->reqHeadersNum++;
 	}
 }
@@ -87,7 +89,7 @@ char* httpRequestGetHeader(struct HttpRequest* request, const char* key)
 
 char* splitRequestLine(const char* start, const char* end, const char* sub, char** ptrDest)
 {
-	char* space = end;
+	char* space = (char*)end;
 	if (sub != NULL)
 	{
 		space = memmem(start, end - start, sub, strlen(sub));
@@ -98,7 +100,7 @@ char* splitRequestLine(const char* start, const char* end, const char* sub, char
 	strncpy(temp, start, length);
 	temp[length] = '\0';
 	*ptrDest = temp;
-	return space != end ? (space + strlen(sub)) : end;
+	return space != end ? (space + strlen(sub)) : (char*)end;
 }
 
 bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf)
@@ -166,7 +168,7 @@ bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf)
 		char* start = readBuf->data + readBuf->readPos;
 		int lineSize = end - start;
 		// 基于 : 搜索字符串
-		char* middle = memmem(start, lineSize, ": ", 2);
+		char* middle = (char*)memmem(start, lineSize, ": ", 2);
 		if (middle != NULL)
 		{
 			int keySize = middle - start;
@@ -422,11 +424,17 @@ void sendDir(const char* dirName, struct Buffer* sendBuf, int cfd)
 			sprintf(buf + strlen(buf), "<tr><td><a href=\"%s\">%s</a></td><td>%ld</td></tr>", name, name, st.st_size);
 		}
 		bufferAppendString(sendBuf, buf);
+#ifndef MSG_SEND_AUTO
+		bufferSendData(sendBuf, cfd);
+#endif
 		memset(buf, 0, sizeof(buf));
 		free(namelist[i]);
 	}
 	sprintf(buf, "</table></body></html>");
 	bufferAppendString(sendBuf, buf);
+#ifndef MSG_SEND_AUTO
+	bufferSendData(sendBuf, cfd);
+#endif
 	free(namelist);
 }
 
@@ -445,6 +453,9 @@ void sendFile(const char* fileName, struct Buffer* sendBuf, int cfd)
 		if (len > 0)
 		{
 			bufferAppendData(sendBuf, buf, len);
+#ifndef MSG_SEND_AUTO
+			bufferSendData(sendBuf, cfd);
+#endif
 			usleep(10);	// 重要！！！
 		}
 		else if (len == 0)

@@ -24,6 +24,8 @@ struct ChannelElement
 	struct ChannelElement* next;
 };
 
+struct Dispatcher;
+
 struct EventLoop
 {
 	bool isQuit;						// ״̬

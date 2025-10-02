@@ -3,6 +3,8 @@
 #include "Channel.h"
 #include "EventLoop.h"
 
+struct EventLoop;
+
 struct Dispatcher
 {
 	void* (*init)();														// 初始化select, poll 或 epoll需要的数据块

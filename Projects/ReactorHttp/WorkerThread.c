@@ -1,4 +1,5 @@
 #include "WorkerThread.h"
+#include <stdio.h>
 
 int workerThreadInit(struct WorkerThread* thread, int index)
 {
