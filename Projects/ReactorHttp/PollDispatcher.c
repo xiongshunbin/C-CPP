@@ -1,4 +1,4 @@
-#include "Dispatcher.h"
+ï»¿#include "Dispatcher.h"
 #include <poll.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -62,7 +62,7 @@ static int pollRemove(struct Channel* channel, struct EventLoop* evLoop)
 			break;
 		}
 	}
-	// Í¨¹ý Channel ÊÍ·Å¶ÔÓ¦µÄ TcpConnection ×ÊÔ´
+	// é€šè¿‡ Channel é‡Šæ”¾å¯¹åº”çš„ TcpConnection èµ„æº
 	channel->destroyCallback(channel->arg);
 	if (i >= Max)
 		return -1;

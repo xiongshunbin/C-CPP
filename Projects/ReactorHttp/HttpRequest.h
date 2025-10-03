@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Buffer.h"
 #include <stdbool.h>
 #include "HttpResponse.h"
 
-// ÇëÇóÍ·¼üÖµ¶Ô
+// è¯·æ±‚å¤´é”®å€¼å¯¹
 struct RequestHeader
 {
 	char* key;
 	char* value;
 };
 
-// µ±Ç°½âÎö×´Ì¬
+// å½“å‰è§£æçŠ¶æ€
 enum HttpRequestState
 {
 	ParseReqLine,
@@ -20,7 +20,7 @@ enum HttpRequestState
 	ParseReqDone
 };
 
-// ¶¨ÒåHttpÇëÇó½á¹¹Ìå
+// å®šä¹‰Httpè¯·æ±‚ç»“æ„ä½“
 struct HttpRequest
 {
 	char* method;
@@ -31,44 +31,44 @@ struct HttpRequest
 	enum HttpRequestState curState;
 };
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 struct HttpRequest* httpRequestInit();
 
-// ÖØÖÃ
+// é‡ç½®
 void httpRequestReset(struct HttpRequest* request);
 void httpRequestResetEx(struct HttpRequest* request);
 void httpRequestDestroy(struct HttpRequest* request);
 
-// »ñÈ¡´¦Àí×´Ì¬
+// è·å–å¤„ç†çŠ¶æ€
 enum HttpRequestState httpRequestState(struct HttpRequest* request);
 
-// Ìí¼ÓÇëÇóÍ·
+// æ·»åŠ è¯·æ±‚å¤´
 void httpRequestAddHeader(struct HttpRequest* request, const char* key, const char* value);
 
-// ¸ù¾İkeyµÃµ½ÇëÇóÍ·µÄvalue
+// æ ¹æ®keyå¾—åˆ°è¯·æ±‚å¤´çš„value
 char* httpRequestGetHeader(struct HttpRequest* request, const char* key);
 
-// ½âÎöÇëÇóĞĞ
+// è§£æè¯·æ±‚è¡Œ
 bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf);
 
-// ½âÎöÇëÇóÍ·
+// è§£æè¯·æ±‚å¤´
 bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf);
 
-// ½âÎöHTTPÇëÇóĞ­Òé
+// è§£æHTTPè¯·æ±‚åè®®
 bool parseHttpRequest(struct HttpRequest* request, struct Buffer* readBuf, 
 	struct HttpResponse* response, struct Buffer* sendBuf, int socketFd);
 
-// ´¦ÀíHTTPÇëÇóĞ­Òé
+// å¤„ç†HTTPè¯·æ±‚åè®®
 int processHttpRequest(struct HttpRequest* request, struct HttpResponse* response);
 
-// ½âÂë×Ö·û´®
+// è§£ç å­—ç¬¦ä¸²
 void decodeMsg(char* to, char* from);
 
-// ¸ù¾İÎÄ¼şÃû»ñÈ¡ÎÄ¼şÀàĞÍ
+// æ ¹æ®æ–‡ä»¶åè·å–æ–‡ä»¶ç±»å‹
 const char* getFileType(const char* name);
 
-// ·¢ËÍÄ¿Â¼
+// å‘é€ç›®å½•
 void sendDir(const char* dirName, struct Buffer* sendBuf, int cfd);
 
-// ·¢ËÍÎÄ¼ş
+// å‘é€æ–‡ä»¶
 void sendFile(const char* fileName, struct Buffer* sendBuf, int cfd);

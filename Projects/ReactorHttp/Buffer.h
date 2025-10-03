@@ -1,36 +1,36 @@
-#pragma once
+ï»¿#pragma once
 
 struct Buffer
 {
-	char* data;			// Ö¸ÏòÄÚ´æµÄÖ¸Õë
-	int capacity;		// ÄÚ´æ´óĞ¡
-	int readPos;		// ¶ÁÎ»ÖÃ
-	int writePos;		// Ğ´Î»ÖÃ
+	char* data;			// æŒ‡å‘å†…å­˜çš„æŒ‡é’ˆ
+	int capacity;		// å†…å­˜å¤§å°
+	int readPos;		// è¯»ä½ç½®
+	int writePos;		// å†™ä½ç½®
 };
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 struct Buffer* bufferInit(int size);
 
-// Ïú»ÙÄÚ´æ
+// é”€æ¯å†…å­˜
 void bufferDestroy(struct Buffer* buffer);
 
-// ÄÚ´æÀ©Èİ
+// å†…å­˜æ‰©å®¹
 void bufferExtendRoom(struct Buffer* buffer, int size);
 
-// µÃµ½Ê£ÓàµÄ¿ÉĞ´µÄÄÚ´æÈİÁ¿
+// å¾—åˆ°å‰©ä½™çš„å¯å†™çš„å†…å­˜å®¹é‡
 int bufferWriteableSize(struct Buffer* buffer);
 
-// µÃµ½Ê£ÓàµÄ¿É¶Á(Î´¶Á)µÄÄÚ´æÈİÁ¿
+// å¾—åˆ°å‰©ä½™çš„å¯è¯»(æœªè¯»)çš„å†…å­˜å®¹é‡
 int bufferReadableSize(struct Buffer* buffer);
 
-// Ğ´ÄÚ´æ 1.Ö±½ÓĞ´ 2.½ÓÊÕÌ×½Ó×ÖÊı¾İ
+// å†™å†…å­˜ 1.ç›´æ¥å†™ 2.æ¥æ”¶å¥—æ¥å­—æ•°æ®
 int bufferAppendData(struct Buffer* buffer, const char* data, int size);
 int bufferAppendString(struct Buffer* buffer, const char* data);
 
 int bufferSocketRead(struct Buffer* buffer, int fd);
 
-// ¸ù¾İ\r\nÈ¡³öÒ»ĞĞ, ÕÒµ½ÆäÔÚÊı¾İ¿éÖĞµÄÎ»ÖÃ, ·µ»Ø¸ÃÎ»ÖÃ
+// æ ¹æ®\r\nå–å‡ºä¸€è¡Œ, æ‰¾åˆ°å…¶åœ¨æ•°æ®å—ä¸­çš„ä½ç½®, è¿”å›è¯¥ä½ç½®
 char* bufferFindCRLF(struct Buffer* buffer);
 
-// ·¢ËÍÊı¾İ
+// å‘é€æ•°æ®
 int bufferSendData(struct Buffer* buffer, int fd);

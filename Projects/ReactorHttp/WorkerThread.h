@@ -1,19 +1,19 @@
-#pragma once
+ï»¿#pragma once
 #include <pthread.h>
 #include "EventLoop.h"
 
-// ¶¨Òå×ÓÏß³Ì¶ÔÓ¦µÄ½á¹¹Ìå
+// å®šä¹‰å­çº¿ç¨‹å¯¹åº”çš„ç»“æ„ä½“
 struct WorkerThread
 {
-	pthread_t threadID;			// Ïß³ÌID
-	char name[24];				// Ïß³ÌÃû
-	pthread_mutex_t mutex;		// »¥³âËø, ÓÃÓÚÏß³ÌÍ¬²½
-	pthread_cond_t cond;		// Ìõ¼ş±äÁ¿, ÓÃÓÚ×èÈûÏß³Ì
-	struct EventLoop* evLoop;	// ·´Ó¦¶ÑÄ£ĞÍ
+	pthread_t threadID;			// çº¿ç¨‹ID
+	char name[24];				// çº¿ç¨‹å
+	pthread_mutex_t mutex;		// äº’æ–¥é”, ç”¨äºçº¿ç¨‹åŒæ­¥
+	pthread_cond_t cond;		// æ¡ä»¶å˜é‡, ç”¨äºé˜»å¡çº¿ç¨‹
+	struct EventLoop* evLoop;	// ååº”å †æ¨¡å‹
 };
 
-// ³õÊ¼»¯Ïß³Ì
+// åˆå§‹åŒ–çº¿ç¨‹
 int workerThreadInit(struct WorkerThread* thread, int index);
 
-// Æô¶¯Ïß³Ì
+// å¯åŠ¨çº¿ç¨‹
 void workerThreadRun(struct WorkerThread* thread);

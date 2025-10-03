@@ -1,4 +1,4 @@
-#define _GNU_SOURCE
+ï»¿#define _GNU_SOURCE
 #include "HttpRequest.h"
 #include "TcpConnection.h"
 #include <stdio.h>
@@ -105,13 +105,13 @@ char* splitRequestLine(const char* start, const char* end, const char* sub, char
 
 bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf)
 {
-	// ¶Á³öÇëÇóĞĞ, ±£´æ×Ö·û´®½áÊøµØÖ·
+	// è¯»å‡ºè¯·æ±‚è¡Œ, ä¿å­˜å­—ç¬¦ä¸²ç»“æŸåœ°å€
 	char* end = bufferFindCRLF(readBuf);
 
-	// ±£´æ×Ö·û´®ÆğÊ¼µØÖ·
+	// ä¿å­˜å­—ç¬¦ä¸²èµ·å§‹åœ°å€
 	char* start = readBuf->data + readBuf->readPos;
 
-	// ÇëÇóĞĞ×Ü³¤¶È
+	// è¯·æ±‚è¡Œæ€»é•¿åº¦
 	int lineSize = end - start;
 
 	if (lineSize > 0)
@@ -122,7 +122,7 @@ bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf)
 		start = splitRequestLine(start, end, " ", &(request->url));
 		splitRequestLine(start, end, NULL, &(request->version));
 #if 0
-		// ÇëÇó·½Ê½
+		// è¯·æ±‚æ–¹å¼
 		char* space = memmem(start, lineSize, " ", 1);
 		assert(space != NULL);
 		int methodSize = space - start;
@@ -130,7 +130,7 @@ bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf)
 		strncpy(request->method, start, methodSize);
 		request->method[methodSize] = '\0';
 
-		// ÇëÇóµÄ¾²Ì¬×ÊÔ´
+		// è¯·æ±‚çš„é™æ€èµ„æº
 		start = space + 1;
 		space = memmem(start, end - start, " ", 1);
 		assert(space != NULL);
@@ -139,7 +139,7 @@ bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf)
 		strncpy(request->url, start, urlSize);
 		request->url[urlSize] = '\0';
 
-		// HTTP °æ±¾
+		// HTTP ç‰ˆæœ¬
 		start = space + 1;
 		int versionSize = end - start;
 		request->version = (char*)malloc(sizeof(char) * (versionSize + 1));
@@ -147,9 +147,9 @@ bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf)
 		request->version[versionSize] = '\0';
 #endif
 
-		// Îª½âÎöÇëÇóÍ·×ö×¼±¸
+		// ä¸ºè§£æè¯·æ±‚å¤´åšå‡†å¤‡
 		readBuf->readPos = readBuf->readPos + lineSize + strlen("\r\n");
-		// ĞŞ¸Ä×´Ì¬
+		// ä¿®æ”¹çŠ¶æ€
 		request->curState = ParseReqHeaders;
 		return true;
 	}
@@ -158,7 +158,7 @@ bool parseHttpRequestLine(struct HttpRequest* request, struct Buffer* readBuf)
 }
 
 /**
- * º¯Êı¹¦ÄÜ: ´¦ÀíÇëÇóÍ·ÖĞµÄÒ»ĞĞ
+ * å‡½æ•°åŠŸèƒ½: å¤„ç†è¯·æ±‚å¤´ä¸­çš„ä¸€è¡Œ
  */
 bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf)
 {
@@ -167,7 +167,7 @@ bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf)
 	{
 		char* start = readBuf->data + readBuf->readPos;
 		int lineSize = end - start;
-		// »ùÓÚ : ËÑË÷×Ö·û´®
+		// åŸºäº : æœç´¢å­—ç¬¦ä¸²
 		char* middle = (char*)memmem(start, lineSize, ": ", 2);
 		if (middle != NULL)
 		{
@@ -184,15 +184,15 @@ bool parseHttpRequestHeader(struct HttpRequest* request, struct Buffer* readBuf)
 
 			httpRequestAddHeader(request, key, value);
 
-			// ÒÆ¶¯¶ÁÊı¾İµÄÎ»ÖÃ
+			// ç§»åŠ¨è¯»æ•°æ®çš„ä½ç½®
 			readBuf->readPos = readBuf->readPos + lineSize + strlen("\r\n");
 		}
 		else
 		{
-			// ÇëÇóÍ·±»½âÎöÍêÁË, Ìø¹ı¿ÕĞĞ
+			// è¯·æ±‚å¤´è¢«è§£æå®Œäº†, è·³è¿‡ç©ºè¡Œ
 			readBuf->readPos += strlen("\r\n");
 
-			// ĞŞ¸Ä½âÎö×´Ì¬
+			// ä¿®æ”¹è§£æçŠ¶æ€
 			if (strcasecmp(request->method, "POST") == 0)
 			{
 				request->curState = ParseReqBody;
@@ -232,28 +232,28 @@ bool parseHttpRequest(struct HttpRequest* request, struct Buffer* readBuf,
 			return false;
 		}
 
-		// ÅĞ¶ÏÊÇ·ñ½âÎöÍê±Ï, Èç¹ûÍê±Ï, ĞèÒª×¼±¸»Ø¸´µÄÊı¾İ
+		// åˆ¤æ–­æ˜¯å¦è§£æå®Œæ¯•, å¦‚æœå®Œæ¯•, éœ€è¦å‡†å¤‡å›å¤çš„æ•°æ®
 		if (request->curState == ParseReqDone)
 		{
-			// 1.¸ù¾İ½âÎö³öµÄÔ­Ê¼Êı¾İ, ¶Ô¿Í»§¶ËµÄÇëÇó×ö³ö´¦Àí
+			// 1.æ ¹æ®è§£æå‡ºçš„åŸå§‹æ•°æ®, å¯¹å®¢æˆ·ç«¯çš„è¯·æ±‚åšå‡ºå¤„ç†
 			processHttpRequest(request, response);
-			// 2.×éÖ¯ÏìÓ¦Êı¾İ²¢·¢ËÍ¸ø¿Í»§¶Ë
+			// 2.ç»„ç»‡å“åº”æ•°æ®å¹¶å‘é€ç»™å®¢æˆ·ç«¯
 			httpResponsePrepareMsg(response, sendBuf, socketFd);
 		}
 	}
-	request->curState = ParseReqLine;	// ×´Ì¬»¹Ô­, ±£Ö¤»¹ÄÜ¼ÌĞø´¦ÀíµÚ¶şÌõ¼°ÒÔºóµÄÇëÇó
+	request->curState = ParseReqLine;	// çŠ¶æ€è¿˜åŸ, ä¿è¯è¿˜èƒ½ç»§ç»­å¤„ç†ç¬¬äºŒæ¡åŠä»¥åçš„è¯·æ±‚
 	return flag;
 }
 
 int processHttpRequest(struct HttpRequest* request, struct HttpResponse* response)
 {
-	// ´¦Àí»ùÓÚGETµÄHTTPÇëÇó
-	if (strcasecmp(request->method, "GET") != 0)	// ·ÇGETÇëÇó
+	// å¤„ç†åŸºäºGETçš„HTTPè¯·æ±‚
+	if (strcasecmp(request->method, "GET") != 0)	// éGETè¯·æ±‚
 	{
 		return -1;
 	}
 	decodeMsg(request->url, request->url);
-	// ´¦Àí¿Í»§¶ËÇëÇóµÄ¾²Ì¬×ÊÔ´(Ä¿Â¼»òÕßÎÄ¼ş)
+	// å¤„ç†å®¢æˆ·ç«¯è¯·æ±‚çš„é™æ€èµ„æº(ç›®å½•æˆ–è€…æ–‡ä»¶)
 	const char* file = NULL;
 	if (strcmp(request->url, "/") == 0)
 	{
@@ -263,17 +263,17 @@ int processHttpRequest(struct HttpRequest* request, struct HttpResponse* respons
 	{
 		file = request->url + 1;
 	}
-	// »ñÈ¡ÎÄ¼şÊôĞÔ
+	// è·å–æ–‡ä»¶å±æ€§
 	struct stat st;
 	int ret = stat(file, &st);
 	if (ret == -1)
 	{
-		// ÎÄ¼ş²»´æÔÚ -- »Ø¸´404
-		// ×´Ì¬ĞĞ
+		// æ–‡ä»¶ä¸å­˜åœ¨ -- å›å¤404
+		// çŠ¶æ€è¡Œ
 		response->statusCode = NotFound;
 		strcpy(response->statusMsg, "Not Found");
 
-		// ÏìÓ¦Í·
+		// å“åº”å¤´
 		httpResponseAddHeader(response, "content-type", getFileType(".html"));
 
 		strcpy(response->fileName, "404.html");
@@ -284,16 +284,16 @@ int processHttpRequest(struct HttpRequest* request, struct HttpResponse* respons
 	response->statusCode = OK;
 	strcpy(response->statusMsg, "OK");
 	strcpy(response->fileName, file);
-	// ÅĞ¶ÏÎÄ¼şÀàĞÍ
+	// åˆ¤æ–­æ–‡ä»¶ç±»å‹
 	if (S_ISDIR(st.st_mode))
 	{
-		// °ÑÕâ¸öÄ¿Â¼ÖĞµÄÄÚÈİ·¢ËÍ¸ø¿Í»§¶Ë
+		// æŠŠè¿™ä¸ªç›®å½•ä¸­çš„å†…å®¹å‘é€ç»™å®¢æˆ·ç«¯
 		httpResponseAddHeader(response, "content-type", getFileType(".html"));
 		response->sendDataFun = sendDir;
 	}
 	else
 	{
-		// °ÑÎÄ¼şµÄÄÚÈİ·¢ËÍ¸ø¿Í»§¶Ë
+		// æŠŠæ–‡ä»¶çš„å†…å®¹å‘é€ç»™å®¢æˆ·ç«¯
 		httpResponseAddHeader(response, "content-type", getFileType(file));
 		char temp[32] = { 0 };
 		sprintf(temp, "%ld", st.st_size);
@@ -319,21 +319,21 @@ void decodeMsg(char* to, char* from)
 {
 	for (; *from != '\0'; ++to, ++from)
 	{
-		// isxdigit -> ÅĞ¶Ï×Ö·ûÊÇ²»ÊÇ16½øÖÆ¸ñÊ½£¬È¡ÖµÔÚ 0-f
+		// isxdigit -> åˆ¤æ–­å­—ç¬¦æ˜¯ä¸æ˜¯16è¿›åˆ¶æ ¼å¼ï¼Œå–å€¼åœ¨ 0-f
 		// Linux%E5%86%85%E6%A0%B8.jpg
 		if (from[0] == '%' && isxdigit(from[1]) && isxdigit(from[2]))
 		{
-			// ½«16½øÖÆµÄÊı -> Ê®½øÖÆ ½«Õâ¸öÊıÖµ¸³Öµ¸øÁË×Ö·û int -> char
+			// å°†16è¿›åˆ¶çš„æ•° -> åè¿›åˆ¶ å°†è¿™ä¸ªæ•°å€¼èµ‹å€¼ç»™äº†å­—ç¬¦ int -> char
 			// B2 == 178
-			// ½«3¸ö×Ö·û£¬±ä³ÉÁËÒ»¸ö×Ö·û£¬Õâ¸ö×Ö·û¾ÍÊÇÔ­Ê¼Êı¾İ
+			// å°†3ä¸ªå­—ç¬¦ï¼Œå˜æˆäº†ä¸€ä¸ªå­—ç¬¦ï¼Œè¿™ä¸ªå­—ç¬¦å°±æ˜¯åŸå§‹æ•°æ®
 			*to = hexToDec(from[1]) * 16 + hexToDec(from[2]);
 
-			// Ìø¹ı from[1] ºÍ from[2]£¬ ÒòÎªÔÚµ±Ç°Ñ­»·ÖĞÒÑ¾­´¦Àí¹ıÁË
+			// è·³è¿‡ from[1] å’Œ from[2]ï¼Œ å› ä¸ºåœ¨å½“å‰å¾ªç¯ä¸­å·²ç»å¤„ç†è¿‡äº†
 			from += 2;
 		}
 		else
 		{
-			// ×Ö·û¿½±´£¬¸³Öµ
+			// å­—ç¬¦æ‹·è´ï¼Œèµ‹å€¼
 			*to = *from;
 		}
 	}
@@ -343,10 +343,10 @@ void decodeMsg(char* to, char* from)
 const char* getFileType(const char* name)
 {
 	// a.jpg a.mp4 a.html
-	// ×ÔÓÒÏò×ó²éÕÒ'.'×Ö·û£¬Èç¹û²»´æÔÚ·µ»ØNULL
+	// è‡ªå³å‘å·¦æŸ¥æ‰¾'.'å­—ç¬¦ï¼Œå¦‚æœä¸å­˜åœ¨è¿”å›NULL
 	const char* dot = strrchr(name, '.');
 	if (dot == NULL)
-		return "text/plain; charset=utf-8";	// ´¿ÎÄ±¾
+		return "text/plain; charset=utf-8";	// çº¯æ–‡æœ¬
 	if (strcmp(dot, ".html") == 0 || strcmp(dot, ".htm") == 0)
 		return "text/html; charset=utf-8";
 	if (strcmp(dot, ".jpg") == 0 || strcmp(dot, ".jpeg") == 0)
@@ -378,7 +378,7 @@ const char* getFileType(const char* name)
 	if (strcmp(dot, ".pdf") == 0)
 		return "application/pdf";
 
-	return "text/plain; charset=utf-8";	// ´¿ÎÄ±¾
+	return "text/plain; charset=utf-8";	// çº¯æ–‡æœ¬
 }
 
 /*
@@ -408,7 +408,7 @@ void sendDir(const char* dirName, struct Buffer* sendBuf, int cfd)
 	int num = scandir(dirName, &namelist, NULL, alphasort);
 	for (int i = 0; i < num; i++)
 	{
-		// È¡³öÎÄ¼şÃû namelist Ö¸ÏòµÄÊÇÒ»¸öÖ¸ÕëÊı×é struct durent* tmp[]
+		// å–å‡ºæ–‡ä»¶å namelist æŒ‡å‘çš„æ˜¯ä¸€ä¸ªæŒ‡é’ˆæ•°ç»„ struct durent* tmp[]
 		const char* name = namelist[i]->d_name;
 		struct stat st;
 		char subPath[1024] = { 0 };
@@ -416,7 +416,7 @@ void sendDir(const char* dirName, struct Buffer* sendBuf, int cfd)
 		stat(subPath, &st);
 		if (S_ISDIR(st.st_mode))
 		{
-			// a±êÇ© <a href="">name</a>
+			// aæ ‡ç­¾ <a href="">name</a>
 			sprintf(buf + strlen(buf), "<tr><td><a href=\"%s/\">%s</a></td><td>%ld</td></tr>", name, name, st.st_size);
 		}
 		else
@@ -440,10 +440,10 @@ void sendDir(const char* dirName, struct Buffer* sendBuf, int cfd)
 
 void sendFile(const char* fileName, struct Buffer* sendBuf, int cfd)
 {
-	// 1. ´ò¿ªÎÄ¼ş
+	// 1. æ‰“å¼€æ–‡ä»¶
 	int fd = open(fileName, O_RDONLY);
 	assert(fd > 0);
-	// 2. °ÑÎÄ¼şÖĞµÄÄÚÈİ·¢ËÍµ½¿Í»§¶Ë
+	// 2. æŠŠæ–‡ä»¶ä¸­çš„å†…å®¹å‘é€åˆ°å®¢æˆ·ç«¯
 #if 1
 	char buf[1024];
 	while (1)
@@ -456,7 +456,6 @@ void sendFile(const char* fileName, struct Buffer* sendBuf, int cfd)
 #ifndef MSG_SEND_AUTO
 			bufferSendData(sendBuf, cfd);
 #endif
-			usleep(10);	// ÖØÒª£¡£¡£¡
 		}
 		else if (len == 0)
 		{

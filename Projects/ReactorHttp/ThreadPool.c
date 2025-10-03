@@ -1,4 +1,4 @@
-#include "ThreadPool.h"
+ï»¿#include "ThreadPool.h"
 #include <stdlib.h>
 #include <assert.h>
 
@@ -38,7 +38,7 @@ struct EventLoop* takeWorkerEventLoop(struct ThreadPool* pool)
 	{
 		exit(0);
 	}
-	// ´ÓÏß³Ì³ØÖÐÈ¡³öÒ»¸ö×ÓÏß³Ì£¬È»ºóÈ¡³öÆäÖÐµÄ·´Ó¦¶ÑÊµÀý
+	// ä»Žçº¿ç¨‹æ± ä¸­å–å‡ºä¸€ä¸ªå­çº¿ç¨‹ï¼Œç„¶åŽå–å‡ºå…¶ä¸­çš„ååº”å †å®žä¾‹
 	struct EventLoop* evLoop = pool->mainLoop;
 	if (pool->threadNum > 0)
 	{

@@ -1,4 +1,4 @@
-#define _GNU_SOURCE
+ï»¿#define _GNU_SOURCE
 #include "Buffer.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,31 +36,31 @@ void bufferDestroy(struct Buffer* buffer)
 
 void bufferExtendRoom(struct Buffer* buffer, int size)
 {
-	// 1.ÄÚ´æ¹»ÓÃ - ²»ÐèÒªÀ©ÈÝ
+	// 1.å†…å­˜å¤Ÿç”¨ - ä¸éœ€è¦æ‰©å®¹
 	if (bufferWriteableSize(buffer) >= size)
 		return;
-	// 2.ÄÚ´æÐèÒªºÏ²¢²Å¹»ÓÃ - ²»ÐèÒªÀ©ÈÝ
-	// Ê£ÓàµÄ¿ÉÐ´µÄÄÚ´æ + ÒÑ¶ÁµÄÄÚ´æ > size
+	// 2.å†…å­˜éœ€è¦åˆå¹¶æ‰å¤Ÿç”¨ - ä¸éœ€è¦æ‰©å®¹
+	// å‰©ä½™çš„å¯å†™çš„å†…å­˜ + å·²è¯»çš„å†…å­˜ > size
 	else if (bufferWriteableSize(buffer) + buffer->readPos >= size)
 	{
-		// µÃµ½Î´¶ÁµÄÄÚ´æ´óÐ¡
+		// å¾—åˆ°æœªè¯»çš„å†…å­˜å¤§å°
 		int readable = bufferReadableSize(buffer);
-		// ÒÆ¶¯ÄÚ´æ
+		// ç§»åŠ¨å†…å­˜
 		memcpy(buffer->data, buffer->data + buffer->readPos, readable);
-		// ¸üÐÂÎ»ÖÃ
+		// æ›´æ–°ä½ç½®
 		buffer->readPos = 0;
 		buffer->writePos = readable;
 	}
-	// 3.ÄÚ´æ²»¹»ÓÃ - ÐèÒªÀ©ÈÝ
+	// 3.å†…å­˜ä¸å¤Ÿç”¨ - éœ€è¦æ‰©å®¹
 	else
 	{
 		void* temp = realloc(buffer->data, buffer->capacity + size);
 		if (temp == NULL)
 		{
-			return;		// Ê§°ÜÁË
+			return;		// å¤±è´¥äº†
 		}
 		memset(temp + buffer->capacity, 0, size);
-		// ¸üÐÂÊý¾Ý
+		// æ›´æ–°æ•°æ®
 		buffer->data = temp;
 		buffer->capacity += size;
 	}
@@ -82,11 +82,11 @@ int bufferAppendData(struct Buffer* buffer, const char* data, int size)
 	{
 		return -1;
 	}
-	// ÄÚ´æÀ©ÈÝ
+	// å†…å­˜æ‰©å®¹
 	bufferExtendRoom(buffer, size);
-	// Êý¾Ý¿½±´
+	// æ•°æ®æ‹·è´
 	memcpy(buffer->data + buffer->writePos, data, size);
-	// ¸üÐÂÊý¾Ý
+	// æ›´æ–°æ•°æ®
 	buffer->writePos += size;
 	return 0;
 }
@@ -102,7 +102,7 @@ int bufferSocketRead(struct Buffer* buffer, int fd)
 {
 	// read/recv/readv
 	struct iovec vec[2];
-	// ³õÊ¼»¯Êý×éÔªËØ
+	// åˆå§‹åŒ–æ•°ç»„å…ƒç´ 
 	int writeable = bufferWriteableSize(buffer);
 	vec[0].iov_base = buffer->data + buffer->writePos;
 	vec[0].iov_len = writeable;
@@ -130,10 +130,10 @@ int bufferSocketRead(struct Buffer* buffer, int fd)
 char* bufferFindCRLF(struct Buffer* buffer)
 {
 	/**
-	 * 1.strstr --> ´ó×Ö·û´®ÖÐÆ¥Åä×Ó×Ö·û´®(Óöµ½\0½áÊø)
+	 * 1.strstr --> å¤§å­—ç¬¦ä¸²ä¸­åŒ¹é…å­å­—ç¬¦ä¸²(é‡åˆ°\0ç»“æŸ)
 	 *		char *strstr(const char *haystack, const char *needle);
 	 * 
-	 * 2.memmem --> ´óÊý¾Ý¿éÖÐÆ¥Åä×ÓÊý¾Ý¿é(ÐèÒªÖ¸¶¨Êý¾Ý¿éµÄ´óÐ¡)
+	 * 2.memmem --> å¤§æ•°æ®å—ä¸­åŒ¹é…å­æ•°æ®å—(éœ€è¦æŒ‡å®šæ•°æ®å—çš„å¤§å°)
 	 *		void *memmem(const void *haystack, size_t haystacklen,
 	 *				const void *needle, size_t needlelen);
 	 */
@@ -144,11 +144,12 @@ char* bufferFindCRLF(struct Buffer* buffer)
 
 int bufferSendData(struct Buffer* buffer, int fd)
 {
-	// ÅÐ¶ÏÓÐÎÞÊý¾Ý
+	// åˆ¤æ–­æœ‰æ— æ•°æ®
 	int readable = bufferReadableSize(buffer);
 	if (readable > 0)
 	{
-		int count = send(fd, buffer->data + buffer->readPos, readable, 0);
+		// å¯èƒ½ä¼šäº§ç”Ÿ Broken pip é”™è¯¯å¯¼è‡´ç¨‹åºå´©æºƒ
+		int count = send(fd, buffer->data + buffer->readPos, readable, MSG_NOSIGNAL);
 		if (count > 0)
 		{
 			buffer->readPos += count;

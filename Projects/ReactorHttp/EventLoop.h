@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Dispatcher.h"
 #include "ChannelMap.h"
@@ -8,7 +8,7 @@ extern struct Dispatcher EpollDispatcher;
 extern struct Dispatcher PollDispatcher;
 extern struct Dispatcher SelectDispatcher;
 
-// ´¦Àí½ÚµãÖĞµÄchannelµÄ·½Ê½
+// å¤„ç†èŠ‚ç‚¹ä¸­çš„channelçš„æ–¹å¼
 enum ElemType
 {
 	ADD,
@@ -16,10 +16,10 @@ enum ElemType
 	MODIFY
 };
 
-// ¶¨ÒåÈÎÎñ¶ÓÁĞµÄ½áµã
+// å®šä¹‰ä»»åŠ¡é˜Ÿåˆ—çš„ç»“ç‚¹
 struct ChannelElement
 {
-	int type;							// ´¦Àí¸Ã½ÚµãÖĞµÄchannelµÄ·½Ê½
+	int type;							// å¤„ç†è¯¥èŠ‚ç‚¹ä¸­çš„channelçš„æ–¹å¼
 	struct Channel* channel;
 	struct ChannelElement* next;
 };
@@ -28,41 +28,41 @@ struct Dispatcher;
 
 struct EventLoop
 {
-	bool isQuit;						// ×´Ì¬
+	bool isQuit;						// çŠ¶æ€
 	struct Dispatcher* dispatcher;
 	void* dispatcherData;
-	// ÈÎÎñ¶ÓÁĞ
+	// ä»»åŠ¡é˜Ÿåˆ—
 	struct ChannelElement* head;
 	struct ChannelElement* tail;
-	// ChannelMap (ÎÄ¼şÃèÊö·ûfd -> channel)
+	// ChannelMap (æ–‡ä»¶æè¿°ç¬¦fd -> channel)
 	struct ChannelMap* channelMap;
-	pthread_t threadID;					// Ïß³ÌID
-	char threadName[32];				// Ïß³ÌÃû×Ö
-	pthread_mutex_t mutex;				// »¥³â·ÃÎÊÈÎÎñ¶ÓÁĞ
-	int socketPair[2];					// ´æ´¢±¾µØÍ¨ĞÅµÄÎÄ¼şÃèÊö·û, Í¨¹ısocketpair³õÊ¼»¯
+	pthread_t threadID;					// çº¿ç¨‹ID
+	char threadName[32];				// çº¿ç¨‹åå­—
+	pthread_mutex_t mutex;				// äº’æ–¥è®¿é—®ä»»åŠ¡é˜Ÿåˆ—
+	int socketPair[2];					// å­˜å‚¨æœ¬åœ°é€šä¿¡çš„æ–‡ä»¶æè¿°ç¬¦, é€šè¿‡socketpairåˆå§‹åŒ–
 };
 
 
-// ³õÊ¼»¯EventLoop
+// åˆå§‹åŒ–EventLoop
 struct EventLoop* eventLoopInit();
 struct EventLoop* eventLoopInitEx(const char* threadName);
 
-// Æô¶¯·´Ó¦¶ÑÄ£ĞÍ
+// å¯åŠ¨ååº”å †æ¨¡å‹
 int eventLoopRun(struct EventLoop* evLoop);
 
-// ´¦Àí±»¼¤»îµÄÎÄ¼şÃèÊö·ûfd
+// å¤„ç†è¢«æ¿€æ´»çš„æ–‡ä»¶æè¿°ç¬¦fd
 int eventActivate(struct EventLoop* evLoop, int fd, int events);
 
-// Ìí¼ÓÈÎÎñµ½ÈÎÎñ¶ÓÁĞ
+// æ·»åŠ ä»»åŠ¡åˆ°ä»»åŠ¡é˜Ÿåˆ—
 int eventLoopAddTask(struct EventLoop* evLoop, struct Channel* channel, int type);
 
-// ´¦ÀíÈÎÎñ¶ÓÁĞÖĞµÄÈÎÎñ
+// å¤„ç†ä»»åŠ¡é˜Ÿåˆ—ä¸­çš„ä»»åŠ¡
 int eventLoopProcessTask(struct EventLoop* evLoop);
 
-// ´¦ÀídispatcherÖĞµÄ½Úµã
+// å¤„ç†dispatcherä¸­çš„èŠ‚ç‚¹
 int eventLoopAdd(struct EventLoop* evLoop, struct Channel* channel);
 int eventLoopRemove(struct EventLoop* evLoop, struct Channel* channel);
 int eventLoopModify(struct EventLoop* evLoop, struct Channel* channel);
 
-// ÊÍ·Åchannel
+// é‡Šæ”¾channel
 int destroyChannel(struct EventLoop* evLoop, struct Channel* channel);

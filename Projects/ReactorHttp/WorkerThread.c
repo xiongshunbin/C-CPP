@@ -1,4 +1,4 @@
-#include "WorkerThread.h"
+ï»¿#include "WorkerThread.h"
 #include <stdio.h>
 
 int workerThreadInit(struct WorkerThread* thread, int index)
@@ -11,7 +11,7 @@ int workerThreadInit(struct WorkerThread* thread, int index)
 	return 0;
 }
 
-// ×ÓÏß³ÌµÄ»Øµ÷º¯Êý
+// å­çº¿ç¨‹çš„å›žè°ƒå‡½æ•°
 void* subThreadRunning(void* arg)
 {
 	struct WorkerThread* thread = (struct WorkerThread*)arg;
@@ -25,9 +25,9 @@ void* subThreadRunning(void* arg)
 
 void workerThreadRun(struct WorkerThread* thread)
 {
-	// ´´½¨×ÓÏß³Ì
+	// åˆ›å»ºå­çº¿ç¨‹
 	pthread_create(&thread->threadID, NULL, subThreadRunning, thread);
-	// ×èÈûÖ÷Ïß³Ì, ±£Ö¤×ÓÏß³Ì³É¹¦´´½¨·´Ó¦¶ÑÄ£ÐÍ
+	// é˜»å¡žä¸»çº¿ç¨‹, ä¿è¯å­çº¿ç¨‹æˆåŠŸåˆ›å»ºååº”å †æ¨¡åž‹
 	pthread_mutex_lock(&thread->mutex);
 	while (thread->evLoop == NULL)
 	{

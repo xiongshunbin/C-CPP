@@ -1,4 +1,4 @@
-#include "Channel.h"
+﻿#include "Channel.h"
 #include <stdlib.h>
 
 struct Channel* channelInit(int fd, int events, handleFunc readFunc, 

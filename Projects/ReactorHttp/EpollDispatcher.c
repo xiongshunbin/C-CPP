@@ -1,4 +1,4 @@
-#include "Dispatcher.h"
+ï»¿#include "Dispatcher.h"
 #include <sys/epoll.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -59,7 +59,7 @@ static int epollRemove(struct Channel* channel, struct EventLoop* evLoop)
 		perror("epoll_ctl delete");
 		exit(0);
 	}
-	// Í¨¹ı Channel ÊÍ·Å¶ÔÓ¦µÄ TcpConnection ×ÊÔ´
+	// é€šè¿‡ Channel é‡Šæ”¾å¯¹åº”çš„ TcpConnection èµ„æº
 	channel->destroyCallback(channel->arg);
 	return ret;
 }
@@ -85,7 +85,7 @@ static int epollDispatch(struct EventLoop* evLoop, int timeout)
 		int fd = data->events[i].data.fd;
 		if (events & EPOLLERR || events & EPOLLHUP)
 		{
-			// ¶Ô·½¶Ï¿ªÁËÁ¬½Ó£¬É¾³ıÎÄ¼şÃèÊö·û
+			// å¯¹æ–¹æ–­å¼€äº†è¿æ¥ï¼Œåˆ é™¤æ–‡ä»¶æè¿°ç¬¦
 			// epollRemove(Channel, evLoop);
 			continue;
 		}

@@ -1,15 +1,18 @@
-#include "TcpConnection.h"
+ï»¿#include "TcpConnection.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "Log.h"
 
 int processRead(void* arg)
 {
 	struct TcpConnection* conn = (struct TcpConnection*)arg;
-	// ½ÓÊÕÊý¾Ý
+	// æŽ¥æ”¶æ•°æ®
 	int count = bufferSocketRead(conn->readBuf, conn->channel->fd);
+	Debug("æœåŠ¡å™¨æŽ¥æ”¶åˆ°çš„httpè¯·æ±‚æ•°æ®: %s", conn->readBuf->data + conn->readBuf->readPos);
+
 	if (count > 0)
 	{
-		// ½ÓÊÕµ½ÁË http ÇëÇó, ½âÎö http ÇëÇó
+		// æŽ¥æ”¶åˆ°äº† http è¯·æ±‚, è§£æž http è¯·æ±‚
 #ifdef MSG_SEND_AUTO
 		writeEventEnable(conn->channel, true);
 		eventLoopAddTask(conn->evLoop, conn->channel, MODIFY);
@@ -17,13 +20,23 @@ int processRead(void* arg)
 		bool flag = parseHttpRequest(conn->request, conn->readBuf, conn->response, conn->writeBuf, conn->channel->fd);
 		if (!flag)
 		{
-			// ½âÎöÊ§°Ü£¬»Ø¸´Ò»¸ö¼òµ¥µÄ html
+			// è§£æžå¤±è´¥ï¼Œå›žå¤ä¸€ä¸ªç®€å•çš„ html
 			const char* errMsg = "HTTP/1.1 400 Bad Request\r\n\r\n";
 			bufferAppendString(conn->writeBuf, errMsg);
+#ifndef MSG_SEND_AUTO
+			bufferSendData(conn->writeBuf, conn->channel->fd);
+#endif
 		}
 	}
+	else
+	{
+#ifdef MSG_SEND_AUTO
+		// æ–­å¼€è¿žæŽ¥
+		eventLoopAddTask(conn->evLoop, conn->channel, DELETE);
+#endif
+	}
 #ifndef MSG_SEND_AUTO
-	// ¶Ï¿ªÁ¬½Ó
+	// æ–­å¼€è¿žæŽ¥
 	eventLoopAddTask(conn->evLoop, conn->channel, DELETE);
 #endif
 	return 0;
@@ -31,19 +44,20 @@ int processRead(void* arg)
 
 int processWrite(void* arg)
 {
+	Debug("å¼€å§‹å‘é€æ•°æ®(åŸºäºŽå†™äº‹ä»¶å‘é€)......");
 	struct TcpConnection* conn = (struct TcpConnection*)arg;
-	// ·¢ËÍÊý¾Ý
+	// å‘é€æ•°æ®
 	int count = bufferSendData(conn->writeBuf, conn->channel->fd);
 	if (count > 0)
 	{
-		// ÅÐ¶ÏÊý¾ÝÊÇ·ñ±»È«²¿·¢ËÍ³öÈ¥ÁË
+		// åˆ¤æ–­æ•°æ®æ˜¯å¦è¢«å…¨éƒ¨å‘é€å‡ºåŽ»äº†
 		if (bufferReadableSize(conn->writeBuf) == 0)
 		{
-			// 1.²»ÔÙ¼ì²âÐ´ÊÂ¼þ -- ÐÞ¸Ä Channel ÖÐ±£´æµÄÊÂ¼þ
+			// 1.ä¸å†æ£€æµ‹å†™äº‹ä»¶ -- ä¿®æ”¹ Channel ä¸­ä¿å­˜çš„äº‹ä»¶
 			writeEventEnable(conn->channel, false);
-			// 2.ÐÞ¸Ä Dispatcher ¼ì²éµÄ¼¯ºÏ -- Ìí¼ÓÈÎÎñ½Úµã
+			// 2.ä¿®æ”¹ Dispatcher æ£€æŸ¥çš„é›†åˆ -- æ·»åŠ ä»»åŠ¡èŠ‚ç‚¹
 			eventLoopAddTask(conn->evLoop, conn->channel, MODIFY);
-			// 3.É¾³ý½Úµã
+			// 3.åˆ é™¤èŠ‚ç‚¹
 			eventLoopAddTask(conn->evLoop, conn->channel, DELETE);
 		}
 	}
@@ -57,11 +71,13 @@ struct TcpConnection* tcpConnectionInit(int fd, struct EventLoop* evLoop)
 	conn->readBuf = bufferInit(10240);
 	conn->writeBuf = bufferInit(10240);
 	sprintf(conn->name, "Connection-%d", fd);
-	// http Ð­Òé
+	// http åè®®
 	conn->request = httpRequestInit();
 	conn->response = httpResponseInit();
 	conn->channel = channelInit(fd, ReadEvent, processRead, processWrite, tcpConnectionDestroy, conn);
 	eventLoopAddTask(evLoop, conn->channel, ADD);
+	Debug("æœåŠ¡å™¨å’Œå®¢æˆ·ç«¯å»ºç«‹è¿žæŽ¥, ThreadName: %s, ThreadID: %lu, ConnectionName: %s",
+		evLoop->threadName, evLoop->threadID, conn->name);
 
 	return conn;
 }
@@ -71,6 +87,8 @@ int tcpConnectionDestroy(void* arg)
 	struct TcpConnection* conn = (struct TcpConnection*)arg;
 	if (conn != NULL)
 	{
+		Debug("è¿žæŽ¥æ–­å¼€, é‡Šæ”¾èµ„æº, ConnectionName: %s", conn->name);
+
 		if (conn->readBuf != NULL && bufferReadableSize(conn->readBuf)
 			&& conn->writeBuf != NULL && bufferReadableSize(conn->writeBuf))
 		{

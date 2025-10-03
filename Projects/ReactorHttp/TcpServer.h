@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "EventLoop.h"
 #include "ThreadPool.h"
@@ -17,11 +17,11 @@ struct TcpServer
 	struct Listener* listener;
 };
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 struct TcpServer* tcpServerInit(unsigned short port, int threadNum);
 
-// ³õÊ¼»¯ÓÃÓÚ¼àÌıµÄÎÄ¼şÃèÊö·û
+// åˆå§‹åŒ–ç”¨äºç›‘å¬çš„æ–‡ä»¶æè¿°ç¬¦
 struct Listener* listenerInit(unsigned short port);
 
-// Æô¶¯·şÎñÆ÷
+// å¯åŠ¨æœåŠ¡å™¨
 void tcpServerRun(struct TcpServer* server);

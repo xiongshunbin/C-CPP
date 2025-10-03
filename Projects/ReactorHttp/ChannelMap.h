@@ -1,19 +1,19 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Channel.h"
 
 struct ChannelMap
 {
-	int size;		// ¼ÇÂ¼Ö¸ÕëÖ¸ÏòµÄÊı×éµÄÔªËØ×Ü¸öÊı
+	int size;		// è®°å½•æŒ‡é’ˆæŒ‡å‘çš„æ•°ç»„çš„å…ƒç´ æ€»ä¸ªæ•°
 	// struct Channel* list[];
 	struct Channel** list;
 };
 
-// ³õÊ¼»¯Channel
+// åˆå§‹åŒ–Channel
 struct ChannelMap* channelMapInit(int size);
 
-// Çå¿ÕChannelMap
+// æ¸…ç©ºChannelMap
 void channelMapClear(struct ChannelMap* map);
 
-// ÖØĞÂ·ÖÅäÄÚ´æ¿Õ¼ä
+// é‡æ–°åˆ†é…å†…å­˜ç©ºé—´
 bool makeMapRoom(struct ChannelMap* map, int newSize, int unitSize);

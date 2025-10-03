@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "EventLoop.h"
 #include "Buffer.h"
@@ -6,7 +6,7 @@
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 
-#define MSG_SEND_AUTO
+//#define MSG_SEND_AUTO
 
 struct TcpConnection
 {
@@ -15,13 +15,13 @@ struct TcpConnection
 	struct Buffer* readBuf;
 	struct Buffer* writeBuf;
 	char name[32];
-	// http Ğ­Òé
+	// http åè®®
 	struct HttpRequest* request;
 	struct HttpResponse* response;
 };
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 struct TcpConnection* tcpConnectionInit(int fd, struct EventLoop* evLoop);
 
-// Ïú»Ù
+// é”€æ¯
 int tcpConnectionDestroy(void* arg);

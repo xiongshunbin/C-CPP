@@ -1,10 +1,11 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "TcpServer.h"
 
 int main(int argc, char* argv[])
 {
+#if 1
 	if (argc != 3)
 	{
 		printf("Usage : %s <port> <path>\n", argv[0]);
@@ -12,10 +13,14 @@ int main(int argc, char* argv[])
 	}
 
 	unsigned short port = atoi(argv[1]);
-	// ÇĞ»»·şÎñÆ÷µÄ¹¤×÷Ä¿Â¼
+	// åˆ‡æ¢æœåŠ¡å™¨çš„å·¥ä½œç›®å½•
 	chdir(argv[2]);
+#else
+	unsigned short port = 10000;
+	chdir("/home/wsl-ubuntu/Test/luffy/");
+#endif
 
-	// Æô¶¯·şÎñÆ÷
+	// å¯åŠ¨æœåŠ¡å™¨
 	struct TcpServer* server = tcpServerInit(port, 4);
 	tcpServerRun(server);
 

@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Buffer.h"
 
-// ¶¨Òå×´Ì¬ÂëÃ¶¾Ù
+// å®šä¹‰çŠ¶æ€ç æšä¸¾
 enum HttpStatusCode
 {
 	UnKnown = 0,
@@ -13,38 +13,38 @@ enum HttpStatusCode
 	NotFound = 404
 };
 
-// ¶¨ÒåÏìÓ¦Í·¼üÖµ¶Ô
+// å®šä¹‰å“åº”å¤´é”®å€¼å¯¹
 struct ResponseHeader
 {
 	char key[32];
 	char value[128];
 };
 
-// ¶¨ÒåÒ»¸öº¯ÊıÖ¸Õë, ÓÃÀ´×éÖ¯Òª»Ø¸´¸ø¿Í»§¶ËµÄÊı¾İ¿é
+// å®šä¹‰ä¸€ä¸ªå‡½æ•°æŒ‡é’ˆ, ç”¨æ¥ç»„ç»‡è¦å›å¤ç»™å®¢æˆ·ç«¯çš„æ•°æ®å—
 typedef void (*ResponseBody)(const char* fileName, struct Buffer* sendBuf, int socketFd);
 
-// ¶¨Òå½á¹¹Ìå
+// å®šä¹‰ç»“æ„ä½“
 struct HttpResponse
 {
-	// ×´Ì¬ĞĞ: HTTP°æ±¾, ×´Ì¬Âë, ×´Ì¬ÃèÊö,
+	// çŠ¶æ€è¡Œ: HTTPç‰ˆæœ¬, çŠ¶æ€ç , çŠ¶æ€æè¿°,
 	enum HttpStatusCode statusCode;
 	char statusMsg[128];
-	// ÏìÓ¦Í· - ¼üÖµ¶Ô
+	// å“åº”å¤´ - é”®å€¼å¯¹
 	struct ResponseHeader* headers;
 	int headerNum;
-	// »Ø¸´Êı¾İµÄ´æ´¢Â·¾¶
+	// å›å¤æ•°æ®çš„å­˜å‚¨è·¯å¾„
 	char fileName[128];
 	ResponseBody sendDataFun;
 };
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 struct HttpResponse* httpResponseInit();
 
-// Ïú»Ù
+// é”€æ¯
 void httpResponseDestroy(struct HttpResponse* response);
 
-// Ìí¼ÓÏìÓ¦Í·
+// æ·»åŠ å“åº”å¤´
 void httpResponseAddHeader(struct HttpResponse* response, const char* key, const char* value);
 
-// ×éÖ¯HTTPÏìÓ¦±¨ÎÄ
+// ç»„ç»‡HTTPå“åº”æŠ¥æ–‡
 void httpResponsePrepareMsg(struct HttpResponse* response, struct Buffer* sendBuf, int socketFd);

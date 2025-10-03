@@ -1,4 +1,4 @@
-#include "Dispatcher.h"
+ï»¿#include "Dispatcher.h"
 #include <sys/select.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,24 +22,34 @@ static void* selectInit()
 static void setFdSet(struct Channel* channel, struct SelectData* data)
 {
 	if (channel->events & ReadEvent)
+	{
 		FD_SET(channel->fd, &(data->readSet));
+	}
 	if (channel->events & WriteEvent)
+	{
 		FD_SET(channel->fd, &(data->writeSet));
+	}
 }
 
 static void clearFdSet(struct Channel* channel, struct SelectData* data)
 {
 	if (channel->events & ReadEvent)
+	{
 		FD_CLR(channel->fd, &(data->readSet));
+	}
 	if (channel->events & WriteEvent)
+	{
 		FD_CLR(channel->fd, &(data->writeSet));
+	}
 }
 
 static int selectAdd(struct Channel* channel, struct EventLoop* evLoop)
 {
 	struct SelectData* data = (struct SelectData*)(evLoop->dispatcherData);
 	if (channel->fd >= Max)
+	{
 		return -1;
+	}
 	setFdSet(channel, data);
 	return 0;
 }
@@ -48,7 +58,7 @@ static int selectRemove(struct Channel* channel, struct EventLoop* evLoop)
 {
 	struct SelectData* data = (struct SelectData*)(evLoop->dispatcherData);
 	clearFdSet(channel, data);
-	// Í¨¹ý Channel ÊÍ·Å¶ÔÓ¦µÄ TcpConnection ×ÊÔ´
+	// é€šè¿‡ Channel é‡Šæ”¾å¯¹åº”çš„ TcpConnection èµ„æº
 	channel->destroyCallback(channel->arg);
 	return 0;
 }

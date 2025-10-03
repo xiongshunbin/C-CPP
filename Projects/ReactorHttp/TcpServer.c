@@ -1,8 +1,9 @@
-#include "TcpServer.h"
+ï»¿#include "TcpServer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include "TcpConnection.h"
+#include "Log.h"
 
 struct TcpServer* tcpServerInit(unsigned short port, int threadNum)
 {
@@ -17,7 +18,7 @@ struct TcpServer* tcpServerInit(unsigned short port, int threadNum)
 struct Listener* listenerInit(unsigned short port)
 {
 	struct Listener* listener = (struct Listener*)malloc(sizeof(struct Listener));
-	// 1.´´½¨ÓÃÓÚ¼àÌýµÄÎÄ¼þÃèÊö·û
+	// 1.åˆ›å»ºç”¨äºŽç›‘å¬çš„æ–‡ä»¶æè¿°ç¬¦
 	int lfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (lfd == -1)
 	{
@@ -25,7 +26,7 @@ struct Listener* listenerInit(unsigned short port)
 		return NULL;
 	}
 
-	// 2.ÉèÖÃ¶Ë¿Ú¸´ÓÃ
+	// 2.è®¾ç½®ç«¯å£å¤ç”¨
 	int opt = 1;
 	int ret = setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof opt);
 	if (ret == -1)
@@ -34,7 +35,7 @@ struct Listener* listenerInit(unsigned short port)
 		return NULL;
 	}
 
-	// 3.°ó¶¨IPµØÖ·ºÍ¶Ë¿ÚºÅ
+	// 3.ç»‘å®šIPåœ°å€å’Œç«¯å£å·
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
@@ -46,7 +47,7 @@ struct Listener* listenerInit(unsigned short port)
 		return NULL;
 	}
 
-	// 4.ÉèÖÃ¼àÌý
+	// 4.è®¾ç½®ç›‘å¬
 	ret = listen(lfd, 128);
 	if (ret == -1)
 	{
@@ -54,7 +55,7 @@ struct Listener* listenerInit(unsigned short port)
 		return NULL;
 	}
 
-	// 5. ·µ»Ø
+	// 5. è¿”å›ž
 	listener->lfd = lfd;
 	listener->port = port;
 	return listener;
@@ -63,23 +64,24 @@ struct Listener* listenerInit(unsigned short port)
 int acceptConnection(void* arg)
 {
 	struct TcpServer* server = (struct TcpServer*)arg;
-	// ºÍ¿Í»§¶Ë½¨Á¢Á¬½Ó
+	// å’Œå®¢æˆ·ç«¯å»ºç«‹è¿žæŽ¥
 	int cfd = accept(server->listener->lfd, NULL, NULL);
-	// ´ÓÏß³Ì³ØÖÐÈ¡³öÒ»¸ö×ÓÏß³ÌµÄ·´Ó¦¶ÑÊµÀý´¦Àícfd
+	// ä»Žçº¿ç¨‹æ± ä¸­å–å‡ºä¸€ä¸ªå­çº¿ç¨‹çš„ååº”å †å®žä¾‹å¤„ç†cfd
 	struct EventLoop* evLoop = takeWorkerEventLoop(server->threadPool);
-	// ½« cfd ·Åµ½ TcpConnection ÖÐ´¦Àí
+	// å°† cfd æ”¾åˆ° TcpConnection ä¸­å¤„ç†
 	tcpConnectionInit(cfd, evLoop);
 	return 0;
 }
 
 void tcpServerRun(struct TcpServer* server)
 {
-	// Æô¶¯Ïß³Ì³Ø
+	Debug("æœåŠ¡å™¨ç¨‹åºå·²ç»å¯åŠ¨äº†......");
+	// å¯åŠ¨çº¿ç¨‹æ± 
 	threadPoolRun(server->threadPool);
-	// Ìí¼Ó¼ì²âµÄÈÎÎñ
-	// ³õÊ¼»¯Ò»¸öchannelÊµÀý
+	// æ·»åŠ æ£€æµ‹çš„ä»»åŠ¡
+	// åˆå§‹åŒ–ä¸€ä¸ªchannelå®žä¾‹
 	struct Channel* channel = channelInit(server->listener->lfd, ReadEvent, acceptConnection, NULL, NULL, server);
 	eventLoopAddTask(server->mainLoop, channel, ADD);
-	// Æô¶¯·´Ó¦¶ÑÄ£ÐÍ
+	// å¯åŠ¨ååº”å †æ¨¡åž‹
 	eventLoopRun(server->mainLoop);
 }

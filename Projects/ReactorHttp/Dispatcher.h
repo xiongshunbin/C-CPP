@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Channel.h"
 #include "EventLoop.h"
@@ -7,10 +7,10 @@ struct EventLoop;
 
 struct Dispatcher
 {
-	void* (*init)();														// ³õÊ¼»¯select, poll »ò epollĞèÒªµÄÊı¾İ¿é
-	int (*add)(struct Channel* channel, struct EventLoop* evLoop);			// Ìí¼Ó
-	int (*remove)(struct Channel* channel, struct EventLoop* evLoop);		// É¾³ı
-	int (*modify)(struct Channel* channel, struct EventLoop* evLoop);		// ĞŞ¸Ä
-	int (*dispatch)(struct EventLoop* evLoop, int timeout);					// ÊÂ¼ş¼ì²â(timeoutµÄµ¥Î»: s)
-	int (*clear)(struct EventLoop* evLoop);									// Çå³ıÊı¾İ(¹Ø±ÕÎÄ¼şÃèÊö·û or ÊÍ·ÅÄÚ´æ)
+	void* (*init)();														// åˆå§‹åŒ–select, poll æˆ– epolléœ€è¦çš„æ•°æ®å—
+	int (*add)(struct Channel* channel, struct EventLoop* evLoop);			// æ·»åŠ 
+	int (*remove)(struct Channel* channel, struct EventLoop* evLoop);		// åˆ é™¤
+	int (*modify)(struct Channel* channel, struct EventLoop* evLoop);		// ä¿®æ”¹
+	int (*dispatch)(struct EventLoop* evLoop, int timeout);					// äº‹ä»¶æ£€æµ‹(timeoutçš„å•ä½: s)
+	int (*clear)(struct EventLoop* evLoop);									// æ¸…é™¤æ•°æ®(å…³é—­æ–‡ä»¶æè¿°ç¬¦ or é‡Šæ”¾å†…å­˜)
 };

@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 #include <stdbool.h>
 #include "EventLoop.h"
 #include "WorkerThread.h"
 
-// ¶¨ÒåÏß³Ì³Ø
+// å®šä¹‰çº¿ç¨‹æ± 
 struct ThreadPool
 {
-	// Ö÷Ïß³ÌµÄ·´Ó¦¶ÑÄ£ĞÍ
+	// ä¸»çº¿ç¨‹çš„ååº”å †æ¨¡å‹
 	struct EventLoop* mainLoop;
 	bool isStart;
 	int threadNum;
@@ -14,11 +14,11 @@ struct ThreadPool
 	int index;
 };
 
-// ³õÊ¼»¯Ïß³Ì³Ø
+// åˆå§‹åŒ–çº¿ç¨‹æ± 
 struct ThreadPool* threadPoolInit(struct EventLoop* mainLoop, int count);
 
-// Æô¶¯Ïß³Ì³Ø
+// å¯åŠ¨çº¿ç¨‹æ± 
 void threadPoolRun(struct ThreadPool* pool);
 
-// È¡³öÏß³Ì³ØÖĞµÄÄ³¸ö×ÓÏß³ÌµÄ·´Ó¦¶ÑÊµÀı
+// å–å‡ºçº¿ç¨‹æ± ä¸­çš„æŸä¸ªå­çº¿ç¨‹çš„ååº”å †å®ä¾‹
 struct EventLoop* takeWorkerEventLoop(struct ThreadPool* pool);

@@ -1,4 +1,4 @@
-#include "ChannelMap.h"
+ï»¿#include "ChannelMap.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,10 +33,10 @@ bool makeMapRoom(struct ChannelMap* map, int newSize, int unitSize)
 	if (map->size < newSize)
 	{
 		int curSize = map->size;
-		// ÈİÁ¿Ã¿´ÎÀ©´óÔ­À´µÄÒ»±¶
+		// å®¹é‡æ¯æ¬¡æ‰©å¤§åŸæ¥çš„ä¸€å€
 		while (curSize < newSize)
 			curSize *= 2;
-		// À©Èİ realloc
+		// æ‰©å®¹ realloc
 		struct Channel** temp = realloc(map->list, curSize * unitSize);
 		if (temp == NULL)
 			return false;

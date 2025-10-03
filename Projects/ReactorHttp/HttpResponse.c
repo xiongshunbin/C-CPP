@@ -1,4 +1,4 @@
-#include "HttpResponse.h"
+Ôªø#include "HttpResponse.h"
 #include "TcpConnection.h"
 #include <stdlib.h>
 #include <strings.h>
@@ -14,10 +14,10 @@ struct HttpResponse* httpResponseInit()
 	bzero(response->statusMsg, sizeof(response->statusMsg));
 	response->headers = (struct ResponseHeader*)malloc(sizeof(struct ResponseHeader) * resHeaderSize);
 	response->headerNum = 0;
-	// ≥ı ºªØ ˝◊È
+	// ÂàùÂßãÂåñÊï∞ÁªÑ
 	bzero(response->headers, sizeof(struct ResponseHeader) * resHeaderSize);
 	bzero(response->fileName, sizeof(response->fileName));
-	// ∫Ø ˝÷∏’Î
+	// ÂáΩÊï∞ÊåáÈíà
 	response->sendDataFun = NULL;
 
 	return response;
@@ -48,12 +48,12 @@ void httpResponseAddHeader(struct HttpResponse* response, const char* key, const
 
 void httpResponsePrepareMsg(struct HttpResponse* response, struct Buffer* sendBuf, int socketFd)
 {
-	// 1.◊¥Ã¨––
+	// 1.Áä∂ÊÄÅË°å
 	char temp[1024] = { 0 };
 	sprintf(temp, "HTTP/1.1 %d %s\r\n", response->statusCode, response->statusMsg);
 	bufferAppendString(sendBuf, temp);
 
-	// 2.œÏ”¶Õ∑
+	// 2.ÂìçÂ∫îÂ§¥
 	for (int i = 0; i < response->headerNum; i++)
 	{
 		bzero(temp, sizeof((temp)));
@@ -61,11 +61,11 @@ void httpResponsePrepareMsg(struct HttpResponse* response, struct Buffer* sendBu
 		bufferAppendString(sendBuf, temp);
 	}
 
-	// 3.ø’––
+	// 3.Á©∫Ë°å
 	bufferAppendString(sendBuf, "\r\n");
 #ifndef MSG_SEND_AUTO
 	bufferSendData(sendBuf, socketFd);
 #endif
-	// 4.ªÿ∏¥µƒ ˝æ›
+	// 4.ÂõûÂ§çÁöÑÊï∞ÊçÆ
 	response->sendDataFun(response->fileName, sendBuf, socketFd);
 }
