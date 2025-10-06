@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include <string>
 #include "Channel.h"
 #include "EventLoop.h"
+#include <string>
 
-struct EventLoop;
+class EventLoop;
 
 class Dispatcher
 {

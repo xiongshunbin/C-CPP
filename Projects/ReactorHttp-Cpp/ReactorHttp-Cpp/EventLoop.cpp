@@ -5,6 +5,9 @@
 #include <sys/socket.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "SelectDispatcher.h"
+#include "PollDispatcher.h"
+#include "EpollDispatcher.h"
 
 struct EventLoop* eventLoopInit()
 {
@@ -18,39 +21,9 @@ void taskWakeup(struct EventLoop* evLoop)
 	write(evLoop->socketPair[0], msg, strlen(msg));
 }
 
-// 读数据, 子线程检测的evLoop->socketPair[1]触发读事件，线程解除阻塞
-int readLocalMessage(void* arg)
-{
-	struct EventLoop* evLoop = (struct EventLoop*)arg;
-	char buf[256];
-	read(evLoop->socketPair[1], buf, sizeof(buf));
-	return 0;
-}
-
 struct EventLoop* eventLoopInitEx(const char* threadName)
 {
-	struct EventLoop* evLoop = (struct EventLoop*)malloc(sizeof(struct EventLoop));
-	evLoop->isQuit = false;
-	evLoop->dispatcher = &EpollDispatcher;
-	evLoop->dispatcherData = evLoop->dispatcher->init();
-	// 任务队列初始化
-	evLoop->head = evLoop->tail = NULL;
-	// 初始化ChannelMap
-	evLoop->channelMap = channelMapInit(128);
-	evLoop->threadID = pthread_self();
-	strcpy(evLoop->threadName, threadName == NULL ? "MainThread" : threadName);
-	pthread_mutex_init(&evLoop->mutex, NULL);
-	int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, evLoop->socketPair);
-	if (ret == -1)
-	{
-		perror("socketpair");
-		exit(0);
-	}
-	// 指定规则: evLoop->socketPair[0] 发送数据, evLoop->socketPair[1] 接收数据
-	struct Channel* channel = channelInit(evLoop->socketPair[1], ReadEvent, readLocalMessage, NULL, NULL, evLoop);
-	// 把 channel 添加到任务队列
-	eventLoopAddTask(evLoop, channel, ADD);
-	return evLoop;
+
 }
 
 int eventLoopRun(struct EventLoop* evLoop)
@@ -220,5 +193,43 @@ int destroyChannel(struct EventLoop* evLoop, struct Channel* channel)
 	close(fd);
 	// 释放channel
 	free(channel);
+	return 0;
+}
+
+EventLoop::EventLoop() : EventLoop(std::string())
+{
+
+}
+
+EventLoop::EventLoop(const std::string& threadName)
+{
+	m_dispatcher = new EpollDispatcher(this);
+	// 初始化ChannelMap
+	m_channelMap.clear();
+	m_threadID = std::this_thread::get_id();
+	m_threadName = (threadName == std::string()) ? "MainThread" : threadName;
+	int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, m_socketPair);
+	if (ret == -1)
+	{
+		perror("socketpair");
+		exit(0);
+	}
+	// 指定规则: evLoop->socketPair[0] 发送数据, evLoop->socketPair[1] 接收数据
+	Channel* channel = new Channel(m_socketPair[1], FDEvent::ReadEvent, 
+		readLocalMessage, nullptr, nullptr, this);
+	// 把 channel 添加到任务队列
+	addTask(channel, ElemType::ADD);
+}
+
+EventLoop::~EventLoop()
+{
+}
+
+// 读数据, 子线程检测的evLoop->socketPair[1]触发读事件，线程解除阻塞
+int EventLoop::readLocalMessage(void* arg)
+{
+	EventLoop* evLoop = static_cast<EventLoop*>(arg);
+	char buf[256];
+	read(evLoop->m_socketPair[1], buf, sizeof(buf));
 	return 0;
 }
