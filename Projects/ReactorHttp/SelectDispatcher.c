@@ -1,4 +1,4 @@
-#include "Dispatcher.h"
+ï»¿#include "Dispatcher.h"
 #include <sys/select.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,7 +58,7 @@ static int selectRemove(struct Channel* channel, struct EventLoop* evLoop)
 {
 	struct SelectData* data = (struct SelectData*)(evLoop->dispatcherData);
 	clearFdSet(channel, data);
-	// Í¨¹ý Channel ÊÍ·Å¶ÔÓ¦µÄ TcpConnection ×ÊÔ´
+	// é€šè¿‡ Channel é‡Šæ”¾å¯¹åº”çš„ TcpConnection èµ„æº
 	channel->destroyCallback(channel->arg);
 	return 0;
 }
