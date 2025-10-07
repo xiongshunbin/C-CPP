@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Dispatcher.h"
 #include <poll.h>
@@ -8,10 +8,10 @@ class PollDispatcher : public Dispatcher
 public:
 	explicit PollDispatcher(EventLoop* evLoop = nullptr);
 	~PollDispatcher();
-	int add(Channel* channel) override;			// Ìí¼Ó
-	int remove(Channel* channel) override;		// É¾³ı
-	int modify(Channel* channel) override;		// ĞŞ¸Ä
-	int dispatch(int timeout = 2) override;		// ÊÂ¼ş¼ì²â(timeoutµÄµ¥Î»: s)
+	int add(Channel* channel) override;			// æ·»åŠ 
+	int remove(Channel* channel) override;		// åˆ é™¤
+	int modify(Channel* channel) override;		// ä¿®æ”¹
+	int dispatch(int timeout = 2) override;		// äº‹ä»¶æ£€æµ‹(timeoutçš„å•ä½: s)
 
 private:
 	static const int MAX_NODE = 1024;

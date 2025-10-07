@@ -40,13 +40,15 @@ public:
 	int addTask(Channel* channel, ElemType type);
 
 	// 处理任务队列中的任务
-	int processTask();
+	int processTaskQueue();
 
 	// 释放channel
 	int freeChannel(Channel* channel);
 
 private:
 	static int readLocalMessage(void* arg);
+	int readMessage();
+	void taskWakeup();
 
 	// 处理dispatcher中的节点
 	int add(Channel* channel);
@@ -58,7 +60,7 @@ private:
 	// 父类指针指向子类的实例(SelectDispatcher, PollDispatcher, EpollDispatcher)
 	Dispatcher* m_dispatcher = nullptr;
 	// 任务队列
-	std::queue<ChannelElement*> m_taskQ;
+	std::queue<ChannelElement*> m_taskQueue;
 	// ChannelMap (文件描述符fd -> channel)
 	std::map<int, Channel*> m_channelMap;
 	std::thread::id m_threadID;				// 线程ID

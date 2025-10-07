@@ -63,7 +63,7 @@ int PollDispatcher::remove(Channel* channel)
 		}
 	}
 	// 通过 Channel 释放对应的 TcpConnection 资源
-	channel->destroyCallback(channel->getArg());
+	channel->destroyCallback(const_cast<void*>(channel->getArg()));
 	if (i >= MAX_NODE)
 	{
 		return -1;

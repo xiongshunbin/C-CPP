@@ -1,8 +1,6 @@
 ﻿#pragma once
+#include <functional>
 #include <cstdint>
-
-// 定义函数指针
-using handleFunc = int(*)(void* arg);
 
 // 定义文件描述符的读写事件
 enum class FDEvent : uint8_t
@@ -13,9 +11,16 @@ enum class FDEvent : uint8_t
 	ReadWriteEvent = ReadEvent | WriteEvent
 };
 
+/**
+ * 可调用对象包装器特点: 
+ *		1.包装的是函数指针(函数的地址 -- 函数名)或可调用对象(可以像函数一样使用的对象)
+ *		2.最终得到地址, 但未被调用
+ */
+
 class Channel
 {
 public:
+	using handleFunc = std::function<int(void* arg)>;
 	Channel(int fd, FDEvent events, handleFunc readFunc, handleFunc writeFunc, handleFunc destroyFunc, void* arg);
 	~Channel();
 
@@ -28,7 +33,7 @@ public:
 	// 取出私有数据成员的值
 	inline int getSocketFd() { return m_fd; }
 	inline int getEvent() { return m_events; }
-	inline void* getArg() { return m_arg; }
+	inline const void* getArg() { return m_arg; }
 
 private:
 	int m_fd;						// 文件描述符
@@ -36,7 +41,7 @@ private:
 	void* m_arg = nullptr;			// 回调函数的参数
 
 public:
-	handleFunc readCallback = nullptr;		// 读回调
-	handleFunc writeCallback = nullptr;		// 写回调
-	handleFunc destroyCallback = nullptr;	// 销毁回调
+	handleFunc readCallback;		// 读回调
+	handleFunc writeCallback;		// 写回调
+	handleFunc destroyCallback;		// 销毁回调
 };

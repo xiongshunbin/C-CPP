@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Dispatcher.h"
 #include <sys/epoll.h>
@@ -8,10 +8,10 @@ class EpollDispatcher : public Dispatcher
 public:
 	explicit EpollDispatcher(EventLoop* evLoop = nullptr);
 	~EpollDispatcher();
-	int add(Channel* channel) override;			// Ìí¼Ó
-	int remove(Channel* channel) override;		// É¾³ı
-	int modify(Channel* channel) override;		// ĞŞ¸Ä
-	int dispatch(int timeout = 2) override;		// ÊÂ¼ş¼ì²â(timeoutµÄµ¥Î»: s)
+	int add(Channel* channel) override;			// æ·»åŠ 
+	int remove(Channel* channel) override;		// åˆ é™¤
+	int modify(Channel* channel) override;		// ä¿®æ”¹
+	int dispatch(int timeout = 2) override;		// äº‹ä»¶æ£€æµ‹(timeoutçš„å•ä½: s)
 
 private:
 	int epollCtl(Channel* channel, int op);
