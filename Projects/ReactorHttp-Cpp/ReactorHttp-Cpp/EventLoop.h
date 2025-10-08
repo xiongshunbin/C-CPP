@@ -27,7 +27,7 @@ class EventLoop
 {
 public:
 	EventLoop();
-	EventLoop(const std::string& threadName);
+	explicit EventLoop(const std::string& threadName);
 	~EventLoop();
 
 	// 启动反应堆模型
@@ -44,6 +44,9 @@ public:
 
 	// 释放channel
 	int freeChannel(Channel* channel);
+
+	// 返回线程ID
+	inline std::thread::id getThreadID() const { return m_threadID; }
 
 private:
 	static int readLocalMessage(void* arg);

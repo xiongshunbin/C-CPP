@@ -86,9 +86,9 @@
     <ClCompile Include="PollDispatcher.cpp" />
     <ClCompile Include="SelectDispatcher.cpp" />
     <ClCompile Include="TcpConnection.c" />
-    <ClCompile Include="TcpServer.c" />
-    <ClCompile Include="ThreadPool.c" />
-    <ClCompile Include="WorkerThread.c" />
+    <ClCompile Include="TcpServer.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
+    <ClCompile Include="WorkerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />

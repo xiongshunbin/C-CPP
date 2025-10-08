@@ -1,9 +1,9 @@
 ﻿#include "EventLoop.h"
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <assert.h>
 #include <sys/socket.h>
-#include <stdio.h>
 #include <unistd.h>
 #include "SelectDispatcher.h"
 #include "PollDispatcher.h"
@@ -11,7 +11,6 @@
 
 EventLoop::EventLoop() : EventLoop(std::string())
 {
-
 }
 
 EventLoop::EventLoop(const std::string& threadName)

@@ -31,9 +31,9 @@ public:
 	bool isWriteEventEnable();
 
 	// 取出私有数据成员的值
-	inline int getSocketFd() { return m_fd; }
-	inline int getEvent() { return m_events; }
-	inline const void* getArg() { return m_arg; }
+	inline int getSocketFd() const { return m_fd; }
+	inline int getEvent() const { return m_events; }
+	inline const void* getArg() const { return m_arg; }
 
 private:
 	int m_fd;						// 文件描述符

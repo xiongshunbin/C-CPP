@@ -5,12 +5,10 @@ Channel::Channel(int fd, FDEvent events, handleFunc readFunc,
 	: m_fd(fd), m_events(static_cast<int>(events)), m_arg(arg), 
 	readCallback(readFunc), writeCallback(writeFunc), destroyCallback(destroyFunc)
 {
-
 }
 
 Channel::~Channel()
 {
-
 }
 
 void Channel::writeEventEnable(bool flag)

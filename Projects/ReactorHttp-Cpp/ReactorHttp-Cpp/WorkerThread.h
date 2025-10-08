@@ -1,19 +1,30 @@
 ﻿#pragma once
-#include <pthread.h>
+
 #include "EventLoop.h"
+#include <condition_variable>
 
 // 定义子线程对应的结构体
-struct WorkerThread
+class WorkerThread
 {
-	pthread_t threadID;			// 线程ID
-	char name[24];				// 线程名
-	pthread_mutex_t mutex;		// 互斥锁, 用于线程同步
-	pthread_cond_t cond;		// 条件变量, 用于阻塞线程
-	struct EventLoop* evLoop;	// 反应堆模型
+public:
+	explicit WorkerThread(int index);
+	~WorkerThread();
+
+	// 启动线程
+	void run();
+
+	// 返回反应堆实例
+	inline const EventLoop* getEventLoop() const { return m_evLoop; }
+
+private:
+	// 子线程的回调函数
+	void subThreadRunning();
+
+private:
+	std::thread* m_thread = nullptr;		// 线程handle
+	std::thread::id m_threadID;				// 线程ID
+	std::string m_threadName;				// 线程名
+	std::mutex m_mutex;						// 互斥锁, 用于线程同步
+	std::condition_variable m_condition;	// 条件变量, 用于阻塞线程
+	EventLoop* m_evLoop = nullptr;			// 反应堆模型
 };
-
-// 初始化线程
-int workerThreadInit(struct WorkerThread* thread, int index);
-
-// 启动线程
-void workerThreadRun(struct WorkerThread* thread);
