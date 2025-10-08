@@ -3,39 +3,32 @@
 class Buffer
 {
 public:
-	Buffer();
+	explicit Buffer(int size);
 	~Buffer();
 
-	// 初始化
-	struct Buffer* bufferInit(int size);
-
-	// 销毁内存
-	void bufferDestroy(struct Buffer* buffer);
-
 	// 内存扩容
-	void bufferExtendRoom(struct Buffer* buffer, int size);
-
-	// 得到剩余的可写的内存容量
-	int bufferWriteableSize(struct Buffer* buffer);
-
-	// 得到剩余的可读(未读)的内存容量
-	int bufferReadableSize(struct Buffer* buffer);
+	void extendRoom(int size);
 
 	// 写内存 1.直接写 2.接收套接字数据
-	int bufferAppendData(struct Buffer* buffer, const char* data, int size);
-	int bufferAppendString(struct Buffer* buffer, const char* data);
-
-	int bufferSocketRead(struct Buffer* buffer, int fd);
+	int appendString(const char* data, int size);
+	int appendString(const char* data);
+	int socketRead(int fd);
 
 	// 根据\r\n取出一行, 找到其在数据块中的位置, 返回该位置
-	char* bufferFindCRLF(struct Buffer* buffer);
+	char* findCRLF();
 
 	// 发送数据
-	int bufferSendData(struct Buffer* buffer, int fd);
+	int sendData(int fd);
+
+	// 得到剩余的可写的内存容量
+	inline int writeableSize() { return m_capacity - m_writePos; }
+
+	// 得到剩余的可读(未读)的内存容量
+	inline int readableSize() { return m_writePos - m_readPos; }
 
 private:
-	char* data;			// 指向内存的指针
-	int capacity;		// 内存大小
-	int readPos;		// 读位置
-	int writePos;		// 写位置
+	char* m_data = nullptr;		// 指向内存的指针
+	int m_capacity = 0;			// 内存大小
+	int m_readPos = 0;			// 标记读的相对位置
+	int m_writePos = 0;			// 标记写的相对位置
 };

@@ -78,7 +78,7 @@ int bufferReadableSize(struct Buffer* buffer)
 
 int bufferAppendData(struct Buffer* buffer, const char* data, int size)
 {
-	if (buffer == NULL || data == NULL || size == 0)
+	if (buffer == NULL || data == NULL || size <= 0)
 	{
 		return -1;
 	}

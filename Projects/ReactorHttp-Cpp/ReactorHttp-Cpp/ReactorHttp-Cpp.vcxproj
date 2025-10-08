@@ -75,7 +75,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="Buffer.c" />
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Channel.cpp" />
     <ClCompile Include="Dispatcher.cpp" />
     <ClCompile Include="EpollDispatcher.cpp" />
