@@ -82,10 +82,10 @@
     <ClCompile Include="EventLoop.cpp" />
     <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="HttpResponse.cpp" />
-    <ClCompile Include="main.c" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="PollDispatcher.cpp" />
     <ClCompile Include="SelectDispatcher.cpp" />
-    <ClCompile Include="TcpConnection.c" />
+    <ClCompile Include="TcpConnection.cpp" />
     <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="WorkerThread.cpp" />
