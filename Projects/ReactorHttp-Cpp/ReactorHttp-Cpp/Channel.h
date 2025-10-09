@@ -41,7 +41,7 @@ private:
 	void* m_arg = nullptr;			// 回调函数的参数
 
 public:
-	handleFunc readCallback;		// 读回调
-	handleFunc writeCallback;		// 写回调
-	handleFunc destroyCallback;		// 销毁回调
+	handleFunc readCallback = nullptr;		// 读回调
+	handleFunc writeCallback = nullptr;		// 写回调
+	handleFunc destroyCallback = nullptr;	// 销毁回调
 };

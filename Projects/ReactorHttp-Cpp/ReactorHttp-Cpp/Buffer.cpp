@@ -106,7 +106,7 @@ int Buffer::socketRead(int fd)
 	return result;
 }
 
-char* Buffer::findCRLF()
+const char* Buffer::findCRLF()
 {
 	/**
 	* 1.strstr --> 大字符串中匹配子字符串(遇到\0结束)
