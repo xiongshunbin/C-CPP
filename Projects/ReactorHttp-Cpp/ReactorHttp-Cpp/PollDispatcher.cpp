@@ -115,11 +115,11 @@ int PollDispatcher::dispatch(int timeout)
 
 		if (m_fds[i].revents & POLLIN)
 		{
-			eventActivate(evLoop, data->fds[i].fd, ReadEvent);
+			m_evLoop->eventActivate(m_fds[i].fd, static_cast<int>(FDEvent::ReadEvent));
 		}
 		if (m_fds[i].revents & POLLOUT)
 		{
-			eventActivate(evLoop, data->fds[i].fd, WriteEvent);
+			m_evLoop->eventActivate(m_fds[i].fd, static_cast<int>(FDEvent::WriteEvent));
 		}
 	}
 	return 0;

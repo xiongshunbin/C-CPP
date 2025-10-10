@@ -1,5 +1,4 @@
-﻿#define _GNU_SOURCE
-#include "Buffer.h"
+﻿#include "Buffer.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -43,14 +42,14 @@ void Buffer::extendRoom(int size)
 	// 3.内存不够用 - 需要扩容
 	else
 	{
-		void* temp = realloc(m_data, (m_capacity + size) * sizeof(char));
+		char* temp = static_cast<char*>(realloc(m_data, (m_capacity + size) * sizeof(char)));
 		if (temp == nullptr)
 		{
 			return;		// 失败了
 		}
 		memset(temp + m_capacity, 0, size * sizeof(char));
 		// 更新数据
-		m_data = static_cast<char*>(temp);
+		m_data = temp;
 		m_capacity += size;
 	}
 }
@@ -74,6 +73,12 @@ int Buffer::appendString(const char* data)
 {
 	int size = strlen(data);
 	int ret = appendString(data, size);
+	return ret;
+}
+
+int Buffer::appendString(std::string msg)
+{
+	int ret = appendString(msg.data());
 	return ret;
 }
 
@@ -116,7 +121,7 @@ const char* Buffer::findCRLF()
 	*		void *memmem(const void *haystack, size_t haystacklen,
 	*				const void *needle, size_t needlelen);
 	*/
-	char* ptr = (char*)memmem(m_data + m_readPos, readableSize(), "\r\n", 2);
+	char* ptr = static_cast<char*>(memmem(m_data + m_readPos, readableSize(), "\r\n", 2));
 
 	return ptr;
 }

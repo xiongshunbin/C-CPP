@@ -21,8 +21,8 @@ int main(int argc, char* argv[])
 #endif
 
 	// 启动服务器
-	struct TcpServer* server = tcpServerInit(port, 4);
-	tcpServerRun(server);
+	TcpServer* server = new TcpServer(port, 4);
+	server->run();
 
 	return 0;
 }

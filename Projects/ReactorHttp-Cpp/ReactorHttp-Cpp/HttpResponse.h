@@ -44,14 +44,5 @@ private:
 
 public:
 	// 定义一个可调用对象, 用来组织要回复给客户端的数据块
-	std::function<void(std::string, struct Buffer*, int)> sendDataFun;
-};
-
-const std::map<unsigned short, std::string> HttpResponse::m_info = {
-	{0, "Unknown"},
-	{200, "OK"},
-	{301, "Moved Permanently"},
-	{302, "Found"},
-	{400, "Bad Request"},
-	{404, "Not Found"}
+	std::function<void(const std::string&, Buffer*, int)> sendDataFun;
 };

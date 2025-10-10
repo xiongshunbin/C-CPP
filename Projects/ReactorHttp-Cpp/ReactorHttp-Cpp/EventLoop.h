@@ -5,6 +5,7 @@
 #include <map>
 #include <thread>
 #include <mutex>
+#include <string>
 
 // 处理节点中的channel的方式
 enum class ElemType : uint8_t

@@ -69,7 +69,7 @@ int EventLoop::eventActivate(int fd, int events)
 	}
 
 	// 取出 channel
-	Channel* channel = m_channelMap[fd];
+	Channel* channel = m_channelMap.at(fd);
 	assert(channel->getSocketFd() == fd);
 	if ((events & static_cast<int>(FDEvent::ReadEvent)) && channel->readCallback)
 	{

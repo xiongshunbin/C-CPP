@@ -89,8 +89,8 @@ int tcpConnectionDestroy(void* arg)
 	{
 		Debug("连接断开, 释放资源, ConnectionName: %s", conn->name);
 
-		if (conn->readBuf != NULL && bufferReadableSize(conn->readBuf)
-			&& conn->writeBuf != NULL && bufferReadableSize(conn->writeBuf))
+		if (conn->readBuf != NULL && bufferReadableSize(conn->readBuf) == 0
+			&& conn->writeBuf != NULL && bufferReadableSize(conn->writeBuf) == 0)
 		{
 			destroyChannel(conn->evLoop, conn->channel);
 			bufferDestroy(conn->readBuf);

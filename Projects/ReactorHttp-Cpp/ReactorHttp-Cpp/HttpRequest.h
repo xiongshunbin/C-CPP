@@ -51,10 +51,10 @@ public:
 	std::string getFileType(const std::string& name);
 
 	// 发送目录
-	void sendDir(const std::string& dirName, Buffer* sendBuf, int cfd);
+	static void sendDir(const std::string& dirName, Buffer* sendBuf, int cfd);
 
 	// 发送文件
-	void sendFile(const std::string& fileName, Buffer* sendBuf, int cfd);
+	static void sendFile(const std::string& fileName, Buffer* sendBuf, int cfd);
 
 	// 获取/设置处理状态
 	inline ParseState getParseState() const { return m_curState; }

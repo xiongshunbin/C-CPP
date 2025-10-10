@@ -1,5 +1,4 @@
-﻿#define _GNU_SOURCE
-#include "HttpRequest.h"
+﻿#include "HttpRequest.h"
 #include "TcpConnection.h"
 #include <cstdio>
 #include <cstdlib>
@@ -152,7 +151,7 @@ bool HttpRequest::parseHttpRequest(Buffer* readBuf, HttpResponse* response, Buff
 			// 1.根据解析出的原始数据, 对客户端的请求做出处理
 			processHttpRequest(response);
 			// 2.组织响应数据并发送给客户端
-			httpResponsePrepareMsg(response, sendBuf, socketFd);
+			response->prepareMsg(sendBuf, socketFd);
 		}
 	}
 	setParseState(ParseState::ParseReqLine);	// 状态还原, 保证还能继续处理第二条及以后的请求
@@ -184,34 +183,29 @@ int HttpRequest::processHttpRequest(HttpResponse* response)
 	{
 		// 文件不存在 -- 回复404
 		// 状态行
-		response->statusCode = NotFound;
-		strcpy(response->statusMsg, "Not Found");
-
+		response->setStatusCode(HttpStatusCode::NotFound);
 		// 响应头
-		httpResponseAddHeader(response, "content-type", getFileType(".html"));
-
-		strcpy(response->fileName, "404.html");
+		response->addHeader("content-type", getFileType(".html"));
+		// 响应体
+		response->setFileName("404.html");
 		response->sendDataFun = sendFile;
 		return 0;
 	}
 
-	response->statusCode = OK;
-	strcpy(response->statusMsg, "OK");
-	strcpy(response->fileName, file);
+	response->setStatusCode(HttpStatusCode::OK);
+	response->setFileName(file);
 	// 判断文件类型
 	if (S_ISDIR(st.st_mode))
 	{
 		// 把这个目录中的内容发送给客户端
-		httpResponseAddHeader(response, "content-type", getFileType(".html"));
+		response->addHeader("content-type", getFileType(".html"));
 		response->sendDataFun = sendDir;
 	}
 	else
 	{
 		// 把文件的内容发送给客户端
-		httpResponseAddHeader(response, "content-type", getFileType(file));
-		char temp[32] = { 0 };
-		sprintf(temp, "%ld", st.st_size);
-		httpResponseAddHeader(response, "content-length", temp);
+		response->addHeader("content-type", getFileType(file));
+		response->addHeader("content-length", std::to_string(st.st_size));
 		response->sendDataFun = sendFile;
 	}
 	return 0;

@@ -5,6 +5,15 @@
 #include <cstring>
 #include <strings.h>
 
+const std::map<unsigned short, std::string> HttpResponse::m_info = {
+	{0, "Unknown"},
+	{200, "OK"},
+	{301, "Moved Permanently"},
+	{302, "Found"},
+	{400, "Bad Request"},
+	{404, "Not Found"}
+};
+
 HttpResponse::HttpResponse() : m_statusCode(HttpStatusCode::Unknown)
 {
 	m_headers.clear();

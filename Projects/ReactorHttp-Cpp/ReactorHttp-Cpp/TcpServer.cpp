@@ -6,24 +6,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-struct TcpServer* tcpServerInit(unsigned short port, int threadNum)
-{
-}
-
-struct Listener* listenerInit(unsigned short port)
-{
-	
-}
-
-int acceptConnection(void* arg)
-{
-
-}
-
-void tcpServerRun(struct TcpServer* server)
-{
-}
-
 TcpServer::TcpServer(unsigned short port, int threadNum) 
 	: m_port(port), m_threadNum(threadNum)
 {
@@ -100,6 +82,6 @@ int TcpServer::acceptConnection(void* arg)
 	// 从线程池中取出一个子线程的反应堆实例处理cfd
 	EventLoop* evLoop = server->m_threadPool->takeWorkerEventLoop();
 	// 将 cfd 放到 TcpConnection 中处理
-	tcpConnectionInit(cfd, evLoop);
+	new TcpConnection(cfd, evLoop);
 	return 0;
 }

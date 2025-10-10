@@ -55,12 +55,12 @@ int SelectDispatcher::dispatch(int timeout)
 	{
 		if (FD_ISSET(i, &rdtmp))
 		{
-			eventActivate(evLoop, i, ReadEvent);
+			m_evLoop->eventActivate(i, static_cast<int>(FDEvent::ReadEvent));
 		}
 
 		if (FD_ISSET(i, &wrtmp))
 		{
-			eventActivate(evLoop, i, WriteEvent);
+			m_evLoop->eventActivate(i, static_cast<int>(FDEvent::WriteEvent));
 		}
 	}
 	return 0;
