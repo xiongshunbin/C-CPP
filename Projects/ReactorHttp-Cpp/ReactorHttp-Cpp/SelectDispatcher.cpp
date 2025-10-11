@@ -33,8 +33,21 @@ int SelectDispatcher::remove(Channel* channel)
 
 int SelectDispatcher::modify(Channel* channel)
 {
+#if 0
 	clearFdSet(channel);
 	setFdSet(channel);
+#else
+	if (channel->getEvent() & static_cast<int>(FDEvent::ReadEvent))
+	{
+		FD_SET(channel->getSocketFd(), &m_readSet);
+		FD_CLR(channel->getSocketFd(), &m_writeSet);
+	}
+	if (channel->getEvent() & static_cast<int>(FDEvent::WriteEvent))
+	{
+		FD_SET(channel->getSocketFd(), &m_writeSet);
+		FD_CLR(channel->getSocketFd(), &m_readSet);
+	}
+#endif
 	return 0;
 }
 

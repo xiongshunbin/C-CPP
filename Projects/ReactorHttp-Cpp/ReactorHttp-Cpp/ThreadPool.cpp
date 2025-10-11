@@ -28,8 +28,8 @@ void ThreadPool::run()
 		for (int i = 0; i < m_threadNum; ++i)
 		{
 			WorkerThread* subThread = new WorkerThread(i);
-			m_workerThreads.push_back(subThread);
 			subThread->run();
+			m_workerThreads.push_back(subThread);
 		}
 	}
 }
