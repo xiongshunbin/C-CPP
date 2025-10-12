@@ -1,4 +1,4 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include "Server.h"
@@ -12,13 +12,13 @@ int main(int argc, char* argv[])
 	}
 
 	unsigned short port = atoi(argv[1]);
-	// ÇĞ»»·şÎñÆ÷µÄ¹¤×÷Ä¿Â¼
+	// åˆ‡æ¢æœåŠ¡å™¨çš„å·¥ä½œç›®å½•
 	chdir(argv[2]);
 
-	// ³õÊ¼»¯ÓÃÓÚ¼àÌıµÄÌ×½Ó×Ö
+	// åˆå§‹åŒ–ç”¨äºç›‘å¬çš„å¥—æ¥å­—
 	int lfd = initListenFd(port);
 
-	// Æô¶¯·şÎñÆ÷³ÌĞò
+	// å¯åŠ¨æœåŠ¡å™¨ç¨‹åº
 	epollRun(lfd);
 
 	return 0;
