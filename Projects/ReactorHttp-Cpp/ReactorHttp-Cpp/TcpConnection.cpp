@@ -1,7 +1,8 @@
 ﻿#include "TcpConnection.h"
 #include <cstdio>
 #include <cstdlib>
-#include "Log.h"
+#include "TcpServer.h"
+#include "spdlog/spdlog.h"
 
 TcpConnection::TcpConnection(int fd, EventLoop* evLoop) : m_evLoop(evLoop)
 {
@@ -26,7 +27,7 @@ TcpConnection::~TcpConnection()
 		delete m_response;
 		m_evLoop->freeChannel(m_channel);
 	}
-	Debug("连接断开, 释放资源, ConnectionName: %s", m_name.data());
+	spdlog::get("basic_logger")->info("连接断开, 释放资源, ConnectionName: {}", m_name);
 }
 
 int TcpConnection::processRead(void* arg)
@@ -35,7 +36,7 @@ int TcpConnection::processRead(void* arg)
 	// 接收数据
 	int socketFd = conn->m_channel->getSocketFd();
 	int count = conn->m_readBuf->socketRead(socketFd);
-	Debug("服务器接收到的http请求数据: %s", conn->m_readBuf->data());
+	spdlog::get("basic_logger")->info("服务器接收到的http请求数据: {}", conn->m_readBuf->data());
 
 	if (count > 0)
 	{
@@ -71,7 +72,7 @@ int TcpConnection::processRead(void* arg)
 
 int TcpConnection::processWrite(void* arg)
 {
-	Debug("开始发送数据(基于写事件发送)......");
+	spdlog::get("basic_logger")->info("开始发送数据(基于写事件发送)......");
 	TcpConnection* conn = static_cast<TcpConnection*>(arg);
 	// 发送数据
 	int count = conn->m_writeBuf->sendData(conn->m_channel->getSocketFd());

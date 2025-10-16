@@ -1,10 +1,10 @@
 ﻿#include "TcpServer.h"
 #include "TcpConnection.h"
-#include "Log.h"
 #include <cstdio>
 #include <cstdlib>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "spdlog/spdlog.h"
 
 TcpServer::TcpServer(unsigned short port, int threadNum) 
 	: m_port(port), m_threadNum(threadNum)
@@ -63,7 +63,8 @@ void TcpServer::setListen()
 
 void TcpServer::run()
 {
-	Debug("服务器程序已经启动了......");
+	spdlog::get("basic_logger")->info("服务器程序已经启动了......");
+	spdlog::get("logger_console")->info("服务器程序已经启动了......");
 	// 启动线程池
 	m_threadPool->run();
 	// 添加检测的任务
