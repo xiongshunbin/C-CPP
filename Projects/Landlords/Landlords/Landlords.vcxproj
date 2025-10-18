@@ -103,7 +103,7 @@
     <ClCompile Include="Strategy.cpp" />
     <ClCompile Include="UserPlayer.cpp" />
     <ClCompile Include="AnimationWindow.cpp" />
-    <ClCompile Include="ButttonGroup.cpp" />
+    <ClCompile Include="ButtonGroup.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardPanel.cpp" />
     <ClCompile Include="Cards.cpp" />

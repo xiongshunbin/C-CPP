@@ -29,7 +29,7 @@
     <ClCompile Include="AnimationWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ButttonGroup.cpp">
+    <ClCompile Include="ButtonGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Card.cpp">
