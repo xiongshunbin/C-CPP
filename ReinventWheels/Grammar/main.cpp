@@ -3,9 +3,10 @@
 #include "SharedPtr.h"
 #include "Virtual.h"
 #include "Emplace_back.h"
+#include "LRUCache.h"
 
 int main()
 {
-	testEmplace_back();
+	testLRUCache();
 	return 0;
 }
