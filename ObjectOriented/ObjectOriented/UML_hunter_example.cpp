@@ -47,9 +47,13 @@ private:
 };
 int Hunter::m_times = 3;
 
+#if 0
+
 int main()
 {
     Hunter hunter;
     cout << hunter.getName() << endl;
     return 0;
 }
+
+#endif
