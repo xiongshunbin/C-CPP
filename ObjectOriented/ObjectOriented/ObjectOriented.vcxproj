@@ -130,6 +130,7 @@
     <ClCompile Include="AbstractFactory.cpp" />
     <ClCompile Include="Builder.cpp" />
     <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="Prototype.cpp" />
     <ClCompile Include="SimpleFactory.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="UML_hunter_example.cpp" />
