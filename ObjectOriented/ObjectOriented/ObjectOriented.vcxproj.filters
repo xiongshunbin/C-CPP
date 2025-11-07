@@ -36,5 +36,8 @@
     <ClCompile Include="Prototype.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Adapter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
