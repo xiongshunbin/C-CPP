@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="AbstractFactory.cpp" />
     <ClCompile Include="Adapter.cpp" />
+    <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="Builder.cpp" />
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Prototype.cpp" />

@@ -55,7 +55,7 @@ public:
 class AbstractChopper
 {
 public:
-	AbstractChopper(Foreigner* foreigner) : m_foreigner(foreigner) {}
+	AbstractChopper(Foreigner* foreigner) : m_foreigner(foreigner) { }
 	virtual void translateToPanda() = 0;
 	virtual void translateToHuman() = 0;
 	virtual ~AbstractChopper() {}
@@ -148,7 +148,7 @@ public:
 class AbstractChopper : protected Panda
 {
 public:
-	AbstractChopper(Foreigner* foreigner) : m_foreigner(foreigner) {}
+	AbstractChopper(Foreigner* foreigner) : m_foreigner(foreigner) { }
 	virtual void translateToPanda() = 0;
 	virtual void translateToHuman() = 0;
 	virtual ~AbstractChopper() {}
