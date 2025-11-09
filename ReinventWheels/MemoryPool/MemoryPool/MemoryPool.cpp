@@ -58,6 +58,7 @@ public:
 
 	std::size_t block_size() const { return block_size_; }
 	std::size_t blocks_per_page() const { return blocks_per_page_; }
+	std::size_t pages_size() const { return pages_.size(); }
 
 private:
 	// ÄÚ´æ¶ÔÆë
@@ -117,4 +118,28 @@ void* Partical::operator new(std::size_t n)
 void Partical::operator delete(void* p) noexcept
 {
 	g_partical_pool.deallocate(p);
+}
+
+int main()
+{
+	std::vector<Partical*> vec;
+	vec.reserve(10000);
+
+	for (int i = 0; i < 10000; i++)
+	{
+		Partical* p = new Partical{ 0, 0, 0, 0 };
+		vec.push_back(p);
+	}
+
+	for (auto* p : vec)
+	{
+		delete p;
+	}
+
+	std::cout << "BlockSize = " << g_partical_pool.block_size()
+		<< ", BlocksPerPage = " << g_partical_pool.blocks_per_page()
+		<< ", PagesSize = " << g_partical_pool.pages_size()
+		<< std::endl;
+
+	return 0;
 }
