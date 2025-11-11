@@ -21,7 +21,7 @@
     <ClCompile Include="SimpleFactory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Factory.cpp">
+    <ClCompile Include="FactoryMethod.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AbstractFactory.cpp">
@@ -40,6 +40,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Bridge.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Composite.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
