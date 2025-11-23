@@ -116,7 +116,7 @@ private:
 	std::list<AbstractTeam*> m_children;
 };
 
-# if 1
+#if 0
 
 void gameover(AbstractTeam* root)
 {
