@@ -132,6 +132,7 @@
     <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="Builder.cpp" />
     <ClCompile Include="Composite.cpp" />
+    <ClCompile Include="Decorator.cpp" />
     <ClCompile Include="FactoryMethod.cpp" />
     <ClCompile Include="Prototype.cpp" />
     <ClCompile Include="SimpleFactory.cpp" />

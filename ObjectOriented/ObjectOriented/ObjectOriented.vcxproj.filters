@@ -48,5 +48,8 @@
     <ClCompile Include="SingletonBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Decorator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
