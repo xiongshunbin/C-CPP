@@ -76,7 +76,7 @@ public:
 	}
 };
 
-// 大丙果实
+// 大饼果实
 class PieFruit : public DevilFruit
 {
 public:
@@ -95,7 +95,7 @@ public:
 	}
 };
 
-#if 1
+#if 0
 
 int main()
 {

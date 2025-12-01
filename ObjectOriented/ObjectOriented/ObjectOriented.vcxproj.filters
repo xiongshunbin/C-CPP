@@ -51,5 +51,8 @@
     <ClCompile Include="Decorator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Facade.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

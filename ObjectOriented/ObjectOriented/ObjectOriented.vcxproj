@@ -133,6 +133,7 @@
     <ClCompile Include="Builder.cpp" />
     <ClCompile Include="Composite.cpp" />
     <ClCompile Include="Decorator.cpp" />
+    <ClCompile Include="Facade.cpp" />
     <ClCompile Include="FactoryMethod.cpp" />
     <ClCompile Include="Prototype.cpp" />
     <ClCompile Include="SimpleFactory.cpp" />
