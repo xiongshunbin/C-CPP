@@ -135,6 +135,7 @@
     <ClCompile Include="Decorator.cpp" />
     <ClCompile Include="Facade.cpp" />
     <ClCompile Include="FactoryMethod.cpp" />
+    <ClCompile Include="Flyweight.cpp" />
     <ClCompile Include="Prototype.cpp" />
     <ClCompile Include="SimpleFactory.cpp" />
     <ClCompile Include="Singleton.cpp" />

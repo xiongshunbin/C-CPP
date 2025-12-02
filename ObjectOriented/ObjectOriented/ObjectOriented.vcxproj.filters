@@ -54,5 +54,8 @@
     <ClCompile Include="Facade.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Flyweight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
