@@ -1,6 +1,14 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
+
+/**
+ * 核心思想:
+ *		1.分离数据块内部的静态资源
+ *		2.共享分离出来的静态资源
+ *		3.享元工厂类
+ */
 
 // 享元类的基类
 class FlyweightBody
@@ -34,7 +42,7 @@ public:
 };
 
 // 享元类的子类 - 彩蛋
-class UniqueBombBody : FlyweightBody
+class UniqueBombBody : public FlyweightBody
 {
 public:
 	using FlyweightBody::FlyweightBody;
@@ -118,14 +126,46 @@ public:
 
 private:
 	std::map<std::string, FlyweightBody*> m_bodyMap;
-
 };
 
 #if 1
 
 int main()
 {
+	BombBodyFactory* factory = new BombBodyFactory;
+	std::vector<LaunchBomb*> bombList;
+	std::vector<std::string> nameList = { "撒旦-1", "撒旦-1", "撒旦-2", "撒旦-2", "撒旦-2", "撒旦-3", "撒旦-3", "撒旦-3" };
+	for (auto& name : nameList)
+	{
+		int x = 0, y = 0;
+		LaunchBomb* launch = new LaunchBomb(factory->getSharedBomb(name));
+		for (int i = 0; i < 3; ++i)
+		{
+			x += rand() % 100;
+			y += rand() % 50;
+			launch->move(x, y);
+		}
+		bombList.push_back(launch);
+	}
+	// 彩蛋
+	UniqueBombBody* unique = new UniqueBombBody("大彩蛋");
+	LaunchBomb* bomb = new LaunchBomb(unique);
+	int x = 0, y = 0;
+	for (int i = 0; i < 3; ++i)
+	{
+		x += rand() % 100;
+		y += rand() % 50;
+		bomb->move(x, y);
+	}
 
+	for (auto& bomb : bombList)
+	{
+		delete bomb;
+	}
+
+	delete factory;
+	delete bomb;
+	delete unique;
 	return 0;
 }
 
