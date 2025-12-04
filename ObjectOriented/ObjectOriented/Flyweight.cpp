@@ -29,13 +29,13 @@ class SharedBombBody : public FlyweightBody
 {
 public:
 	using FlyweightBody::FlyweightBody;
-	void move(int x, int y, int speed)
+	void move(int x, int y, int speed) override
 	{
 		std::cout << "炸弹以每小时" << speed << "的速度飞到了("
 			<< x << ", " << y << ")的位置......" << std::endl;
 	}
 
-	void draw(int x, int y)
+	void draw(int x, int y) override
 	{
 		std::cout << "在(" << x << ", " << y << ")的位置重绘炸弹......" << std::endl;
 	}
@@ -46,13 +46,13 @@ class UniqueBombBody : public FlyweightBody
 {
 public:
 	using FlyweightBody::FlyweightBody;
-	void move(int x, int y, int speed)
+	void move(int x, int y, int speed) override
 	{
 		// 此处省略对参数x, y, speed的处理
 		std::cout << "彩蛋在往指定位置移动, 准备爆炸发放奖励......" << std::endl;
 	}
 
-	void draw(int x, int y)
+	void draw(int x, int y) override
 	{
 		std::cout << "在(" << x << ", " << y << ")的位置重绘彩蛋......" << std::endl;
 	}
@@ -128,7 +128,7 @@ private:
 	std::map<std::string, FlyweightBody*> m_bodyMap;
 };
 
-#if 1
+#if 0
 
 int main()
 {

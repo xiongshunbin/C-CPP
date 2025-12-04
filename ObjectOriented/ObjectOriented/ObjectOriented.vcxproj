@@ -137,6 +137,7 @@
     <ClCompile Include="FactoryMethod.cpp" />
     <ClCompile Include="Flyweight.cpp" />
     <ClCompile Include="Prototype.cpp" />
+    <ClCompile Include="Proxy.cpp" />
     <ClCompile Include="SimpleFactory.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SingletonBase.cpp" />
