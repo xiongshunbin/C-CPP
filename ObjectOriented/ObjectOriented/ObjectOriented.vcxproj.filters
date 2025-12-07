@@ -60,5 +60,8 @@
     <ClCompile Include="Proxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ChainOfResponsibility.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
