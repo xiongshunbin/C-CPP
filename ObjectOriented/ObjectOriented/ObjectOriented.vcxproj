@@ -132,6 +132,7 @@
     <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="Builder.cpp" />
     <ClCompile Include="ChainOfResponsibility.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Composite.cpp" />
     <ClCompile Include="Decorator.cpp" />
     <ClCompile Include="Facade.cpp" />
