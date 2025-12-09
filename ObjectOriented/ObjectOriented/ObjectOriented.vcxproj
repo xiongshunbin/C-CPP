@@ -138,12 +138,17 @@
     <ClCompile Include="Facade.cpp" />
     <ClCompile Include="FactoryMethod.cpp" />
     <ClCompile Include="Flyweight.cpp" />
+    <ClCompile Include="Iterator.h" />
+    <ClCompile Include="MyList.cpp" />
     <ClCompile Include="Prototype.cpp" />
     <ClCompile Include="Proxy.cpp" />
     <ClCompile Include="SimpleFactory.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SingletonBase.cpp" />
     <ClCompile Include="UML_hunter_example.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -186,7 +186,7 @@ private:
 	std::map<int, std::list<AbstractCommand*>> m_cmdList;
 };
 
-#if 1
+#if 0
 
 int main()
 {
