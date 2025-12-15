@@ -68,7 +68,7 @@ std::shared_ptr<Iterator> MyList::getIterator(bool isReverse)
 	return it;
 }
 
-#if 1
+#if 0
 
 int main()
 {
