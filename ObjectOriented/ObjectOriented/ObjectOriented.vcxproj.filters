@@ -66,11 +66,11 @@
     <ClCompile Include="Command.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Iterator.h">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="MyList.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Iterator.h">
+      <Filter>头文件</Filter>
     </ClCompile>
     <ClCompile Include="Mediator.cpp">
       <Filter>源文件</Filter>
@@ -78,6 +78,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Country.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Mediator.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

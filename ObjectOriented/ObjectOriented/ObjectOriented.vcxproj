@@ -149,6 +149,8 @@
     <ClCompile Include="UML_hunter_example.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Country.h" />
+    <ClInclude Include="Mediator.h" />
     <ClInclude Include="MyList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

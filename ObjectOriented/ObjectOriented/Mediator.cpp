@@ -1,173 +1,68 @@
-#include <iostream>
-#include <string>
-#include <map>
+#include "Mediator.h"
+#include "Country.h"
 
-class MediatorOrg;
-// 定义国家类的基类
-class Country
+void MediatorOrg::addMember(Country* country)
 {
-public:
-	Country(MediatorOrg* org) { m_mediatorOrg = org; }
-	virtual void declare(std::string msg, std::string country) = 0;
-	virtual void setMessage(std::string msg) = 0;
-	virtual std::string getName() = 0;
-	virtual ~Country() { }
+	if (country != nullptr)
+	{
+		country->setMediator(this);
+		m_countryMap.insert(std::make_pair(country->getName(), country));
+	}
+}
 
-protected:
-	MediatorOrg* m_mediatorOrg = nullptr;
-};
-
-// 阿拉巴斯坦
-class Alabasta : public Country
+void WorldGovt::declare(std::string msg, Country* country, std::string name)
 {
-public:
-	using Country::Country;
-	virtual void declare(std::string msg, std::string country)
-	{
-		std::cout << "德雷斯罗萨向" << country << "喊话: " << std::endl;
-		m_mediatorOrg->declare(msg, this, country);
-	}
-
-	virtual void setMessage(std::string msg)
-	{
-		std::cout << "阿拉巴斯坦收到的消息: " << msg << std::endl;
-	}
-
-	virtual std::string getName()
-	{
-		return "阿拉巴斯坦";
-	}
-};
-
-// 德雷斯罗萨
-class Dressrosa : public Country
-{
-public:
-	using Country::Country;
-	virtual void declare(std::string msg, std::string country)
-	{
-		std::cout << "德雷斯罗萨开始发布公告: " << std::endl;
-		m_mediatorOrg->declare(msg, this, country);
-	}
-
-	virtual void setMessage(std::string msg)
-	{
-		std::cout << "德雷斯罗萨收到的消息: " << msg << std::endl;
-	}
-
-	virtual std::string getName()
-	{
-		return "德雷斯罗萨";
-	}
-};
-
-// 露露西亚王国
-class Lulusia : public Country
-{
-public:
-	using Country::Country;
-	virtual void declare(std::string msg, std::string country)
-	{
-		std::cout << "露露西亚王国开始发布公告: " << std::endl;
-		m_mediatorOrg->declare(msg, this, country);
-	}
-
-	virtual void setMessage(std::string msg)
-	{
-		std::cout << "露露西亚王国收到的消息: " << msg << std::endl;
-	}
-
-	virtual std::string getName()
-	{
-		return "露露西亚王国";
-	}
-};
-
-// 卡玛巴卡王国
-class Kamabaka : public Country
-{
-public:
-	using Country::Country;
-	virtual void declare(std::string msg, std::string country)
-	{
-		std::cout << "卡玛巴卡王国发布公告: " << std::endl;
-		m_mediatorOrg->declare(msg, this, country);
-	}
-
-	virtual void setMessage(std::string msg)
-	{
-		std::cout << "卡玛巴卡王国收到的消息: " << msg << std::endl;
-	}
-
-	virtual std::string getName()
-	{
-		return "卡玛巴卡王国";
-	}
-};
-
-// 定义中介者类的基类
-class MediatorOrg
-{
-public:
-	void addMember(Country* country)
-	{
-		if (country != nullptr)
-		{
-			m_countryMap.insert(std::make_pair(country->getName(), country));
-		}
-	}
-
-	virtual void declare(std::string msg, Country* country, std::string name) = 0;
-	virtual ~MediatorOrg() { }
-
-protected:
-	std::map<std::string, Country*> m_countryMap;
-};
-
-// 世界政府
-class WorldGovt : public MediatorOrg
-{
-public:
-	void declare(std::string msg, Country* country, std::string name) override
-	{
-		if (m_countryMap.find(name) != m_countryMap.end())
-		{
-			std::string  str = msg + "【来自: " + country->getName() + "】";
-			m_countryMap[name]->setMessage(str);
-		}
-	}
-};
-
-// 革命军
-class GeMingArmy : public MediatorOrg
-{
-public:
-	void declare(std::string msg, Country* country, std::string name) override
+	if (m_countryMap.find(name) != m_countryMap.end())
 	{
 		std::string  str = msg + "【来自: " + country->getName() + "】";
-		for (const auto& item : m_countryMap)
-		{
-			if (item.second == country)
-			{
-				continue;
-			}
-			item.second->setMessage(str);
-		}
+		m_countryMap[name]->setMessage(str);
 	}
-};
+}
 
-#if 1
+void GeMingArmy::declare(std::string msg, Country* country, std::string name)
+{
+	std::string  str = msg + "【来自: " + country->getName() + "】";
+	for (const auto& item : m_countryMap)
+	{
+		if (item.second == country)
+		{
+			continue;
+		}
+		item.second->setMessage(str);
+	}
+}
+
+#if 0
 
 int main()
 {
 	// 世界政府
 	WorldGovt* world = new WorldGovt;
 	// 加盟国对象
-	Alabasta* alaba = new Alabasta(world);
-	Dressrosa* dress = new Dressrosa(world);
+	Alabasta* alaba = new Alabasta;
+	Dressrosa* dress = new Dressrosa;
 	world->addMember(alaba);
 	world->addMember(dress);
 
+	alaba->declare("德雷斯罗萨倒卖军火, 搞得我国连年打仗, 必须给个说法!!!", dress->getName());
+	dress->declare("天龙人都和我多弗朗明哥做生意, 你算老几, 呸!!!", alaba->getName());
+
+	// 革命军
+	GeMingArmy* geming = new GeMingArmy;
+	// 加盟国对象
+	Lulusia* lulu = new Lulusia;
+	Kamabaka* kama = new Kamabaka;
+	geming->addMember(lulu);
+	geming->addMember(kama);
+
+	lulu->declare("我草, 我的国家被伊姆毁灭了!!!");
+
+	delete world;
+	delete geming;
+	delete alaba;
+	delete dress;
+	delete lulu;
+	delete kama;
 
 	return 0;
 }
