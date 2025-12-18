@@ -142,6 +142,7 @@
     <ClCompile Include="Mediator.cpp" />
     <ClCompile Include="Memento.cpp" />
     <ClCompile Include="MyList.cpp" />
+    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Prototype.cpp" />
     <ClCompile Include="Proxy.cpp" />
     <ClCompile Include="SimpleFactory.cpp" />
@@ -153,6 +154,8 @@
     <ClInclude Include="Country.h" />
     <ClInclude Include="Mediator.h" />
     <ClInclude Include="MyList.h" />
+    <ClInclude Include="NewsAgency.h" />
+    <ClInclude Include="Observer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
