@@ -148,6 +148,7 @@
     <ClCompile Include="SimpleFactory.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SingletonBase.cpp" />
+    <ClCompile Include="Strategy.cpp" />
     <ClCompile Include="UML_hunter_example.cpp" />
   </ItemGroup>
   <ItemGroup>
