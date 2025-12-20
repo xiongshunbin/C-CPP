@@ -84,6 +84,9 @@
     <ClCompile Include="Strategy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyList.h">
@@ -99,6 +102,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="NewsAgency.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sanji.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

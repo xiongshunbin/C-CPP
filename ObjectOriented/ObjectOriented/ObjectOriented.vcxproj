@@ -148,6 +148,7 @@
     <ClCompile Include="SimpleFactory.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SingletonBase.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="Strategy.cpp" />
     <ClCompile Include="UML_hunter_example.cpp" />
   </ItemGroup>
@@ -157,6 +158,8 @@
     <ClInclude Include="MyList.h" />
     <ClInclude Include="NewsAgency.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="Sanji.h" />
+    <ClInclude Include="State.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
