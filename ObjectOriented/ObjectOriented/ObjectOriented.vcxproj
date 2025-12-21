@@ -150,6 +150,7 @@
     <ClCompile Include="SingletonBase.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Strategy.cpp" />
+    <ClCompile Include="TemplateMethod.cpp" />
     <ClCompile Include="UML_hunter_example.cpp" />
   </ItemGroup>
   <ItemGroup>
