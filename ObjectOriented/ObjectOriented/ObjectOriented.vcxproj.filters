@@ -90,6 +90,9 @@
     <ClCompile Include="TemplateMethod.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Visitor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyList.h">
@@ -111,6 +114,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Sanji.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Member.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

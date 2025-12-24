@@ -152,15 +152,18 @@
     <ClCompile Include="Strategy.cpp" />
     <ClCompile Include="TemplateMethod.cpp" />
     <ClCompile Include="UML_hunter_example.cpp" />
+    <ClCompile Include="Visitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Country.h" />
     <ClInclude Include="Mediator.h" />
+    <ClInclude Include="Member.h" />
     <ClInclude Include="MyList.h" />
     <ClInclude Include="NewsAgency.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Sanji.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
