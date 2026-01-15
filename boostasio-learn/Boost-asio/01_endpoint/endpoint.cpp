@@ -97,11 +97,56 @@ int connect_to_end()
 		boost::asio::ip::tcp::socket sock(ioc, ep.protocol());
 		sock.connect(ep);
 	}
-	catch (boost::system::error_code& e)
+	catch (boost::system::system_error& e)
 	{
 		std::cout << "Error occured! Error code = " 
-			<< e.value() << ". Message: " << e.value() << std::endl;
-		return e.value();
+			<< e.code() << ". Message: " << e.what() << std::endl;
+		return e.code().value();
+	}
+	return 0;
+}
+
+int dns_connect_to_end()
+{
+	std::string host = "mushan.cc";
+	std::string port_num = "3333";
+	boost::asio::io_context ioc;
+	boost::asio::ip::tcp::resolver::query resolver_query(host, port_num, boost::asio::ip::tcp::resolver::query::numeric_service);
+	boost::asio::ip::tcp::resolver resolver(ioc);
+	try
+	{
+		boost::asio::ip::tcp::resolver::iterator it = resolver.resolve(resolver_query);
+		boost::asio::ip::tcp::socket sock(ioc);
+		boost::asio::connect(sock, it);
+	}
+	catch (boost::system::system_error& e)
+	{
+		std::cout << "Error occured! Error code = "
+			<< e.code() << ". Message: " << e.what() << std::endl;
+		return e.code().value();
+	}
+	return 0;
+}
+
+int accept_new_connection()
+{
+	const int BACKLOG_SIZE = 30;
+	unsigned short port_num = 3333;
+	boost::asio::ip::tcp::endpoint ep(boost::asio::ip::address_v4::any(), port_num);
+	boost::asio::io_context ioc;
+	try
+	{
+		boost::asio::ip::tcp::acceptor acceptor(ioc, ep.protocol());
+		acceptor.bind(ep);
+		acceptor.listen(BACKLOG_SIZE);
+		boost::asio::ip::tcp::socket sock(ioc);
+		acceptor.accept(sock);
+	}
+	catch (boost::system::system_error& e)
+	{
+		std::cout << "Error occured! Error code = "
+			<< e.code() << ". Message: " << e.what() << std::endl;
+		return e.code().value();
 	}
 	return 0;
 }

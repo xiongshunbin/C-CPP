@@ -13,3 +13,7 @@ extern int bind_accptor_socket();
 
 // 连接指定的端点
 extern int connect_to_end();
+extern int dns_connect_to_end();
+
+// 服务器接收连接
+extern int accept_new_connection();
