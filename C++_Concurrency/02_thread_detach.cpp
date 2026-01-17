@@ -6,15 +6,21 @@
 class ShowMsg
 {
 public:
-    ShowMsg(int threadID, int count, std::string str) : m_threadID(threadID), m_count(count), m_str(str) { }
+    ShowMsg(int& threadID, int& count, std::string& str) : m_threadID(threadID), m_count(count), m_str(str) { }
 
     void operator()()
     {
+        std::cout << "Child thread is starting... " << std::endl;
         for (int i = 0; i < m_count; ++i)
         {
             std::cout << "Thread " << m_threadID << ": " << m_str << std::endl;
             sleep(1);
         }
+    }
+
+    ~ShowMsg()
+    {
+        std::cout << "ShowMsg is destructed!" << std::endl;
     }
 
 private:
@@ -54,4 +60,6 @@ void function()
     t1.detach();
 
     mainDoing();
+
+    std::cout << "Finish!" << std::endl;
 }
