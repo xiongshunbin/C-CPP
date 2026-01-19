@@ -23,7 +23,7 @@ struct func
 	func(int& i) : _i(i) { }
 	void operator()()
 	{
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			_i = i;
 			std::cout << "_i = " << _i << std::endl;
@@ -31,7 +31,6 @@ struct func
 		}
 	}
 };
-
 
 /**
  * 线程允许采用 detach 分离的方式在后台独自运行, 这种分离的线程被称为守护线程。
@@ -48,7 +47,7 @@ void oops()
 	int some_local_state = 0;
 	func my_func(some_local_state);
 	std::thread functhread(my_func);
-	// 隐患, 在子线程中访问局部变量的地址或引用, 局部变量可能会随着 } 结束而回收或随着主线程退出而回收
+	// 隐患, 在子线程中访问局部变量的地址或引用, 局部变量可能会随着 } 结束而回收或随着主线程退出而回收。
 	functhread.detach();
 }
 
@@ -58,6 +57,39 @@ void use_join()
 	func my_func(some_local_state);
 	std::thread functhread(my_func);
 	functhread.join();
+}
+
+/**
+ * 当子线程在执行重要的核心任务时, 主线程如果出现异常需要保证子线程稳定运行结束后, 主线程再抛出异常结束运行。
+ */
+void catch_exception()
+{
+	int some_local_state = 0;
+	func myfunc(some_local_state);
+	std::thread functhread{ myfunc };
+	try
+	{
+		// 本线程做一些事情
+		throw "Divide by zero exception.";
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+	catch (const char* s)
+	{
+		std::cout << s << std::endl;
+		functhread.join();
+		return;
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << "Exception occurred! Error: " << e.what() << std::endl;
+		functhread.join();
+		throw;
+	}
+
+	if (functhread.joinable())
+	{
+		functhread.join();
+	}
 }
 
 #if 1
@@ -82,7 +114,9 @@ int main()
 	* 	std::thread t2(background_task());
 	*	t2.join();		// error
 	* 
-	* C++ 编译器会将 t2 解析为 std::thread (*)(background_task (*)()) 类型的函数对象
+	* C++ 编译器会将 t2 解析为 std::thread (*)(background_task (*)()) 类型的函数指针变量。
+	* 
+	* 注: 当线程对象构造调用临时函数对象的有参构造函数时, 编译器能够正常解析。
 	* 
 	* 解决办法:
 	*	1) 参数使用具名变量的仿函数(函数对象), 而不是临时变量
@@ -112,12 +146,16 @@ int main()
 	}, hellostr);
 	t3.join();
 
-	//// detach 隐患
-	//oops();
-	//// 防止主线程退出过快, 需要停顿一下, 让子线程跑起来
-	//std::this_thread::sleep_for(std::chrono::seconds(1));
+	// detach 隐患
+	oops();
+	// 防止主线程退出过快, 需要停顿一下, 让子线程跑起来
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	use_join();
+	// 使用 join 解决子线程访问局部变量的隐患问题
+	 use_join();
+
+	 // 捕获异常
+	 catch_exception();
 
 	return 0;
 }
