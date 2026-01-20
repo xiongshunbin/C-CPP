@@ -92,6 +92,58 @@ void catch_exception()
 	}
 }
 
+// 使用RAII技术, 保证线程对象析构的时候等待线程运行结束, 回收资源
+class thread_guard
+{
+private:
+	std::thread& _t;
+
+public:
+	explicit thread_guard(std::thread& t) : _t(t) { }
+	~thread_guard()
+	{
+		// join() 只能调用一次
+		if (_t.joinable())
+		{
+			_t.join();
+		}
+	}
+
+	thread_guard(const thread_guard&) = delete;
+	thread_guard& operator=(const thread_guard&) = delete;
+};
+
+void auto_guard()
+{
+	int some_local_state = 0;
+	func my_func(some_local_state);
+	std::thread t(my_func);
+	thread_guard g(t);
+	// 本线程做一些事情
+	std::cout << "Auto guard finished!" << std::endl;
+}
+
+void print_str(int i, const std::string& s)
+{
+	std::cout << "i = " << i << ", string: " << s << std::endl;
+}
+
+/**
+ * char* const: 指针常量, 指针所指向的地址(指针自身)不能改变
+ * const char*: 常量指针是指向常量的指针, 指针指向的内容不能改变
+ * 
+ * C++ 隐式转换在线程的调用上可能会造成崩溃问题
+ */
+void danger_oops(int some_param)
+{
+	char buffer[1024];
+	sprintf(buffer, "%i", some_param);
+	// char* -> std::string
+	std::thread t(print_str, 3, buffer);
+	t.detach();
+	std::cout << "Danger oops finished!" << std::endl;
+}
+
 #if 1
 
 int main()
@@ -156,6 +208,13 @@ int main()
 
 	 // 捕获异常
 	 catch_exception();
+
+	 // 自动守卫
+	 auto_guard();
+
+	 // 慎用隐式转换
+	 danger_oops(100);
+	 std::this_thread::sleep_for(std::chrono::seconds(2));
 
 	return 0;
 }
