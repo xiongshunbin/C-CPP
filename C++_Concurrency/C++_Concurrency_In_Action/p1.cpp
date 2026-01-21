@@ -1,7 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <string>
+#include <cstdio>
 
 void thread_work1(std::string str)
 {
@@ -132,7 +135,12 @@ void print_str(int i, const std::string& s)
  * char* const: 指针常量, 指针所指向的地址(指针自身)不能改变
  * const char*: 常量指针是指向常量的指针, 指针指向的内容不能改变
  * 
- * C++ 隐式转换在线程的调用上可能会造成崩溃问题
+ * 线程具有内部存储空间, 参数会按照默认方式先复制到该处, 新创建的执行线程才能直接访问它们。
+ * 然后, 这些副本被当成临时变量, 以右值形式传给新线程上的函数或可调用对象。
+ * 故 C++ 隐式转换在线程的调用上可能会造成崩溃问题。
+ * 
+ * 解决办法:
+ *		直接向 std::thread 的构造函数传递右值即可。
  */
 void danger_oops(int some_param)
 {
@@ -144,6 +152,28 @@ void danger_oops(int some_param)
 	std::cout << "Danger oops finished!" << std::endl;
 }
 
+void safe_oops(int some_param)
+{
+	char buffer[1024];
+	sprintf(buffer, "%i", some_param);
+	std::thread t(print_str, 3, std::string(buffer));
+	t.detach();
+}
+
+void change_param(int& param)
+{
+	param++;
+}
+
+void ref_oops(int some_param)
+{
+	std::cout << "Before change, param = " << some_param << std::endl;
+	// 需使用引用显示转换
+	std::thread t(change_param, std::ref(some_param));
+	t.join();
+	std::cout << "After change, param = " << some_param << std::endl;
+}
+
 #if 1
 
 int main()
@@ -151,7 +181,7 @@ int main()
 	std::string hellostr = "Hello world!";
 	// 通过函数名初始化并启动一个线程
 	std::thread t1(thread_work1, hellostr);
-	//std::this_thread::sleep_for(std::chrono::seconds(1));
+	// std::this_thread::sleep_for(std::chrono::seconds(1));
 	
 	/**
 	 * 在线程销毁前要对其调用 join 等待线程退出或 detach 将线程分离,
@@ -204,17 +234,24 @@ int main()
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	// 使用 join 解决子线程访问局部变量的隐患问题
-	 use_join();
+	use_join();
 
-	 // 捕获异常
-	 catch_exception();
+	// 捕获异常
+	catch_exception();
 
-	 // 自动守卫
-	 auto_guard();
+	// 自动守卫
+	auto_guard();
 
-	 // 慎用隐式转换
-	 danger_oops(100);
-	 std::this_thread::sleep_for(std::chrono::seconds(2));
+	// 慎用隐式转换
+	danger_oops(100);
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+
+	// 尽量传递
+	safe_oops(100);
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+
+	// 绑定引用
+	ref_oops(100);
 
 	return 0;
 }
