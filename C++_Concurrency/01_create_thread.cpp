@@ -3,10 +3,10 @@
 #include <string>
 #include <unistd.h>
 
-// #define FUNCTION_POINTER
+#define FUNCTION_POINTER
 // #define FUNCTION_OBJECT
 // #define LAMBDA
-#define OBJECT_MEMBER
+// #define OBJECT_MEMBER
 
 /**
  * C++11创建线程: 
@@ -58,8 +58,9 @@ int main()
 
     // std::thread t1(showMessage);
 
-    std::thread t1(show, 1, 10, "Hello world!");
-    std::thread t2(show, 2, 20, "I Love You!");
+    std::thread t1(show, 1, 10, "Hello world!");    // char const * -> std::string
+    std::string str = "I Love You!"; 
+    std::thread t2(show, 2, 20, str);     
 
 #elifdef FUNCTION_OBJECT
 
@@ -86,10 +87,10 @@ int main()
 
 #endif
 
-    // t1.join();  // 阻塞主线程等待子线程执行结束
-    // t2.join();  // 阻塞主线程等待子线程执行结束
+    t1.join();  // 阻塞主线程等待子线程执行结束
+    t2.join();  // 阻塞主线程等待子线程执行结束
     // t3.join();
-    t4.join();
+    // t4.join();
 
     std::cout << "Bye!" << std::endl;
 

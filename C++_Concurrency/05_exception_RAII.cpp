@@ -4,6 +4,7 @@
 #include <string>
 
 void function();
+void funct();
 
 class Show
 {
@@ -24,9 +25,29 @@ public:
     }
 };
 
+// RAII(资源获取即初始化)
+class thread_guard
+{
+public:
+    explicit thread_guard(std::thread& thread) : m_thread(thread) { }
+    ~thread_guard()
+    {
+        if (m_thread.joinable())
+        {
+            m_thread.join();
+        }
+    }
+
+    thread_guard(const thread_guard&) = delete;
+    thread_guard&operator=(const thread_guard&) = delete;
+
+private:
+    std::thread& m_thread;
+};
+
 int main()
 {
-    function();
+    funct();
 
     for (int i = 0; i < 100; ++i)
     {
@@ -39,6 +60,7 @@ int main()
     return 0;
 }
 
+// 异常捕获
 void function()
 {
     int threadID = 1;
@@ -67,5 +89,38 @@ void function()
         return;
     }
 
-    t1.join();
+    if (t1.joinable())
+    {
+        t1.join();
+    }
+}
+
+// 出现异常时, 利用 RAII 等待子线程执行结束
+void funct()
+{
+    int threadID = 1;
+    int count = 10;
+    std::string str = "Hello world!";
+
+    Show s1(threadID, count, str);
+    std::thread t1(s1);
+    thread_guard gt(t1);
+
+    int n1, n2;
+    std::cout << "Please enter two numbers: " << std::endl;
+    std::cin >> n1 >> n2;
+
+    try
+    {
+        if (n2 == 0)
+        {
+            throw std::runtime_error("n2 can't be 0!");
+        }
+        std::cout << "n1 / n2 = " << n1 / n2 << std::endl;
+    }
+    catch(const std::runtime_error& e)
+    {
+        std::cout << "Quit with exception..." << std::endl;
+        return;
+    }
 }
