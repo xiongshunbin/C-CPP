@@ -5,6 +5,7 @@
 #include <chrono>
 #include <string>
 #include <cstdio>
+#include <memory>
 
 void thread_work1(std::string str)
 {
@@ -174,6 +175,40 @@ void ref_oops(int some_param)
 	std::cout << "After change, param = " << some_param << std::endl;
 }
 
+class X
+{
+public:
+	void do_lengthy_work()
+	{
+		std::cout << "do_lengthy_work" << std::endl;
+	}
+};
+
+void bind_class_oops()
+{
+	X my_x;
+	std::thread t(&X::do_lengthy_work, &my_x);
+	t.join();
+}
+
+void deal_unique(std::unique_ptr<int> p)
+{
+	std::cout << "The unique ptr data is " << *p << std::endl;
+	(*p)++;
+
+	std::cout << "After some operations, the unique ptr data is " << *p << std::endl;
+}
+
+void move_oops()
+{
+	auto p = std::make_unique<int>(100);
+	std::thread t(deal_unique, std::move(p));
+	t.join();
+
+	// 使用 std::move 移动之后, 源对象(source object)的值变成 NULL
+	// std::cout << "After some operations, the unique ptr data is " << *p << std::endl;
+}
+
 #if 1
 
 int main()
@@ -252,6 +287,12 @@ int main()
 
 	// 绑定引用
 	ref_oops(100);
+
+	// 绑定类成员函数
+	bind_class_oops();
+	
+	// 通过 move 传递参数
+	move_oops();
 
 	return 0;
 }
