@@ -209,7 +209,7 @@ void move_oops()
 	// std::cout << "After some operations, the unique ptr data is " << *p << std::endl;
 }
 
-#if 1
+#if 0
 
 int main()
 {
