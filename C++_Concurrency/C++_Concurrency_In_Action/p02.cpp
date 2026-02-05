@@ -1,6 +1,8 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <vector>
+#include <numeric>
 
 void some_function()
 {
@@ -69,9 +71,9 @@ public:
 	explicit joining_thread(Callable&& func, Args&&... args) :
 		_t(std::forward<Callable>(func), std::forward<Args>(args)...) { }
 	explicit joining_thread(std::thread t) noexcept : _t(std::move(t)) { }
-	joining_thread(joining_thread&& other) noexcept : _t(std::move(other._t)) 
+	joining_thread(joining_thread&& other) noexcept : _t(std::move(other._t))
 	{
-		std::cout << "Use move constructor!";
+		std::cout << "use move constructor!";
 	}
 
 	joining_thread& operator=(joining_thread&& other) noexcept
@@ -159,6 +161,77 @@ void use_jointhread()
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 	}, 10));
+
+	// 把 j2 赋值给 j1 时, joining_thread 内部会等待 j1 汇合结束后再将 j2 赋值给 j1
+	// j1 = j2;		// invalid
+	j1 = std::move(j2);
+}
+
+void use_vector()
+{
+	std::vector<std::thread> threads;
+	for (unsigned i = 0; i < 10; ++i)
+	{
+		/**
+		 * 		std::thread t = std::thread(param_function, i);
+		 *		threads.push_back(std::move(t));
+		 */
+		threads.emplace_back(param_function, i);
+	}
+
+	for (auto& entry : threads)
+	{
+		entry.join();
+	}
+}
+
+// 并行版的 std::accumulate() 的简单实现
+template<typename Iterator, typename T>
+struct accumulate_block
+{
+	void operator()(Iterator first, Iterator last, T& result)
+	{
+		result = std::accumulate(first, last, result);
+	}
+};
+template<typename Iterator, typename T>
+T parallel_accumulate(Iterator first, Iterator last, T init)
+{
+	unsigned long const length = std::distance(first, last);
+	if (!length)
+		return init;
+	unsigned long const min_per_thread = 25;
+	unsigned long const max_threads = (length + min_per_thread - 1) / min_per_thread;
+	unsigned long const hardware_threads = std::thread::hardware_concurrency();
+	unsigned long const num_threads = std::min(hardware_threads != 0 ? hardware_threads : 2, max_threads);
+	unsigned long const block_size = length / num_threads;
+	std::vector<T> results(num_threads);
+	std::vector<std::thread> threads(num_threads - 1);
+	Iterator block_start = first;
+	for (unsigned long i = 0; i < (num_threads - 1); ++i)
+	{
+		Iterator block_end = block_start;
+		std::advance(block_end, block_size);
+		threads[i] = std::thread(accumulate_block<Iterator, T>(), block_start, block_end,std::ref(results[i]));
+		block_start = block_end;
+	}
+	accumulate_block<Iterator, T>()(block_start, last, results[num_threads - 1]);
+	for (auto& entry : threads)
+		entry.join();
+	return std::accumulate(results.begin(), results.end(), init);
+}
+
+void use_parallel_acc()
+{
+	std::vector<int> vec(10000);
+	for (int i = 0; i < 10000; ++i)
+	{
+		vec.push_back(i);
+	}
+
+	long sum = 0;
+	sum = parallel_accumulate<std::vector<int>::iterator, long>(vec.begin(), vec.end(), sum);
+	std::cout << "Sum = " << sum << std::endl;
 }
 
 #if 1
@@ -166,6 +239,14 @@ void use_jointhread()
 int main()
 {
 	// dangerous_use();
+
+	//use_jointhread();
+
+	//use_vector();
+
+	use_parallel_acc();
+
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	return 0;
 }
