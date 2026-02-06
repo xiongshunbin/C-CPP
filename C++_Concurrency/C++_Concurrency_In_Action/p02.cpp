@@ -234,7 +234,7 @@ void use_parallel_acc()
 	std::cout << "Sum = " << sum << std::endl;
 }
 
-#if 1
+#if 0
 
 int main()
 {
