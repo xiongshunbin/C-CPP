@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * C++ 异步日志系统
+ * 
+ */
+
+#define FMT_HEADER_ONLY
+
 #include <iostream>
 #include <queue>
 #include <string>
@@ -13,6 +20,7 @@
 #include <stdexcept>
 #include <chrono>
 #include <iomanip>
+#include "fmt/format.h"
 
 // 辅助函数, 将单个参数转化为字符串
 template<typename T>
@@ -158,34 +166,42 @@ private:
 	template<typename... Args>
 	std::string formatMessage(const std::string& format, Args&&... args)
 	{
-		std::vector<std::string> argStrings = { toStringHelper(std::forward<Args>(args))... };
-		std::ostringstream oss;
-		size_t argIndex = 0;
-		size_t pos = 0;
-		size_t placeHolder = format.find("{}", pos);
-		while (placeHolder != std::string::npos)
+		try
 		{
-			oss << format.substr(pos, placeHolder - pos);
-			if (argIndex < argStrings.size())
+			return getCurrentTime() + "] " + fmt::format(format, std::forward<Args>(args)...);
+		}
+		catch (const fmt::format_error& e)
+		{
+			std::vector<std::string> argStrings = { toStringHelper(std::forward<Args>(args))... };
+			std::ostringstream oss;
+			size_t argIndex = 0;
+			size_t pos = 0;
+			size_t placeHolder = format.find("{}", pos);
+			while (placeHolder != std::string::npos)
+			{
+				oss << format.substr(pos, placeHolder - pos);
+				if (argIndex < argStrings.size())
+				{
+					oss << argStrings[argIndex++];
+				}
+				else
+				{
+					oss << "{}";
+				}
+				pos = placeHolder + 2;
+				placeHolder = format.find("{}", pos);
+			}
+
+			oss << format.substr(pos);
+			while (argIndex < argStrings.size())
 			{
 				oss << argStrings[argIndex++];
 			}
-			else
-			{
-				oss << "{}";
-			}
-			pos = placeHolder + 2;
-			placeHolder = format.find("{}", pos);
+			return getCurrentTime() + "] " + oss.str();
 		}
-
-		oss << format.substr(pos);
-		while (argIndex < argStrings.size())
-		{
-			oss << argStrings[argIndex++];
-		}
-		return getCurrentTime() + "] " + oss.str();
 	}
 
+private:
 	LogQueue m_logQueue;
 	std::thread m_workerThread;
 	std::ofstream m_logFile;

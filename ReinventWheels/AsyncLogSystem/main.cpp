@@ -14,6 +14,7 @@ int main()
 		logger.log(LogLevel::DEBUG, "Hello {}", world);
 		logger.log(LogLevel::WARN, "This is a message without any placeholders");
 		logger.log(LogLevel::ERROR, "Multiple placeholders: {}, {}, ", 1, 2, 3);
+		logger.log(LogLevel::INFO, "I'd rather be {1} than {0}.", "right", "happy");
 	}
 	catch (const std::exception& e)
 	{
