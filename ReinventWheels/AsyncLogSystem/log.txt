@@ -1,6 +1,12 @@
-[INFO	26-02-07 22:11:22.474] Starting application...
-[INFO	26-02-07 22:11:22.484] User 42 performed login in 3.5 seconds.
-[DEBUG	26-02-07 22:11:22.484] Hello World
-[WARN	26-02-07 22:11:22.484] This is a message without any placeholders
-[ERROR	26-02-07 22:11:22.484] Multiple placeholders: 1, 2, 
-[INFO	26-02-07 22:11:22.484] I'd rather be happy than right.
+[INFO	26-02-08 20:43:16.730] Starting application...
+[INFO	26-02-08 20:43:16.734] User 42 performed login in 3.5 seconds.
+[WARN	26-02-08 20:43:16.735] This is a message without any placeholders
+[ERROR	26-02-08 20:43:16.735] Multiple placeholders: 1, 2, 
+[FATAL	26-02-08 20:43:16.735] I'd rather be happy than right.
+[INFO	26-02-08 20:43:16.735] Ending application...
+[INFO	26-02-08 20:47:19.502] Starting application...
+[INFO	26-02-08 20:47:19.504] User 42 performed login in 3.5 seconds.
+[WARN	26-02-08 20:47:19.504] This is a message without any placeholders
+[ERROR	26-02-08 20:47:19.504] Multiple placeholders: 1, 2, 
+[FATAL	26-02-08 20:47:19.504] I'd rather be happy than right.
+[INFO	26-02-08 20:47:19.504] Ending application...
