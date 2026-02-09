@@ -7,8 +7,6 @@
  * 
  */
 
-#define FMT_HEADER_ONLY
-
 #include <iostream>
 #include <queue>
 #include <string>
@@ -23,7 +21,7 @@
 #include <chrono>
 #include <iomanip>
 #include <memory>
-#include "fmt/format.h"
+#include <fmt/format.h>
 
 namespace utility {
 
