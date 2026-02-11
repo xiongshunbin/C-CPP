@@ -321,6 +321,11 @@ public:
 		}
 		return *this;
 	}
+	some_big_object& operator=(some_big_object&& b2) noexcept
+	{
+		_data = std::move(b2._data);
+		return *this;
+	}
 	// 输出运算符重载
 	friend std::ostream& operator<<(std::ostream& os, const some_big_object& big_obj)
 	{
@@ -328,11 +333,151 @@ public:
 		return os;
 	}
 
+	// 交换数据
+	friend void swap(some_big_object& b1, some_big_object& b2);
 
 private:
 	int _data;
 };
 
+void swap(some_big_object& b1, some_big_object& b2)
+{
+	some_big_object temp = std::move(b1);
+	b1 = std::move(b2);
+	b2 = std::move(temp);
+}
+
+class big_object_mgr
+{
+public:
+	big_object_mgr(int data = 0) : _obj(data) { }
+	void printinfo()
+	{
+		std::cout << "Current obj data is: " << _obj << std::endl;
+	}
+
+	friend void danger_swap(big_object_mgr& objm1, big_object_mgr& objm2);
+	friend void safe_swap(big_object_mgr& objm1, big_object_mgr& objm2);
+	friend void safe_swap_scope(big_object_mgr& objm1, big_object_mgr& objm2);
+
+private:
+	std::mutex _mtx;
+	some_big_object _obj;
+};
+
+void danger_swap(big_object_mgr& objm1, big_object_mgr& objm2)
+{
+	std::cout << "Thread [" << std::this_thread::get_id() << "] begin." << std::endl;
+	if (&objm1 == &objm2)
+	{
+		return;
+	}
+
+	std::lock_guard<std::mutex> guard1(objm1._mtx);
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	std::lock_guard<std::mutex> guard2(objm2._mtx);
+	swap(objm1._obj, objm2._obj);
+	std::cout << "Thread [" << std::this_thread::get_id() << "] end." << std::endl;
+}
+
+void test_danger_swap()
+{
+	big_object_mgr objm1(5);
+	big_object_mgr objm2(100);
+
+	std::thread t1(danger_swap, std::ref(objm1), std::ref(objm2));
+	std::thread t2(danger_swap, std::ref(objm2), std::ref(objm1));
+
+	t1.join();
+	t2.join();
+
+	objm1.printinfo();
+	objm2.printinfo();
+}
+
+void safe_swap(big_object_mgr& objm1, big_object_mgr& objm2)
+{
+	std::cout << "Thread [" << std::this_thread::get_id() << "] begin." << std::endl;
+	if (&objm1 == &objm2)
+	{
+		return;
+	}
+
+	std::lock(objm1._mtx, objm2._mtx);
+	// 领养锁管理互斥量解锁
+	std::lock_guard<std::mutex> guard1(objm1._mtx, std::adopt_lock);
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	std::lock_guard<std::mutex> guard2(objm2._mtx, std::adopt_lock);
+	swap(objm1._obj, objm2._obj);
+	std::cout << "Thread [" << std::this_thread::get_id() << "] end." << std::endl;
+}
+
+void test_safe_swap()
+{
+	big_object_mgr objm1(5);
+	big_object_mgr objm2(100);
+
+	std::thread t1(safe_swap, std::ref(objm1), std::ref(objm2));
+	std::thread t2(safe_swap, std::ref(objm2), std::ref(objm1));
+
+	t1.join();
+	t2.join();
+
+	objm1.printinfo();
+	objm2.printinfo();
+}
+
+void safe_swap_scope(big_object_mgr& objm1, big_object_mgr& objm2)
+{
+	std::cout << "Thread [" << std::this_thread::get_id() << "] begin." << std::endl;
+	if (&objm1 == &objm2)
+	{
+		return;
+	}
+
+	std::scoped_lock guard(objm1._mtx, objm2._mtx);
+	swap(objm1._obj, objm2._obj);
+	std::cout << "Thread [" << std::this_thread::get_id() << "] end." << std::endl;
+}
+
+void test_safe_swap_scope()
+{
+	big_object_mgr objm1(5);
+	big_object_mgr objm2(100);
+
+	std::thread t1(safe_swap_scope, std::ref(objm1), std::ref(objm2));
+	std::thread t2(safe_swap_scope, std::ref(objm2), std::ref(objm1));
+
+	t1.join();
+	t2.join();
+
+	objm1.printinfo();
+	objm2.printinfo();
+}
+
+// 层级锁
+class hierarchical_mutex
+{
+public:
+	explicit hierarchical_mutex(unsigned long value) : _hierarchy_value(value),
+		_previous_hierarchy_value(0) { }
+
+	hierarchical_mutex(const hierarchical_mutex&) = delete;
+	hierarchical_mutex& operator=(const hierarchical_mutex&) = delete;
+
+	void lock()
+	{
+		check_for_hierarchy_violation();
+		_internal_mutex.lock();
+
+	}
+
+private:
+	std::mutex _internal_mutex;
+	unsigned long const _hierarchy_value;			// 当前层级值
+	unsigned long const _previous_hierarchy_value;	// 上一层层级值
+	static thread_local unsigned long const _this_thread_hierarchy_value;	// 本线程层级值
+};
 
 #if 1
 
@@ -348,10 +493,11 @@ int main()
 
 	// test_safe_lock();
 
-	some_big_object bigobj1(100);
-	some_big_object bigobj2(200);
+	// test_danger_swap();
 
-	bigobj2 = bigobj1;
+	// test_safe_swap();
+
+	test_safe_swap_scope();
 
 	return 0;
 }
