@@ -6,9 +6,8 @@
 #include <exception>
 #include <memory>
 
-std::mutex mtx1;
-
 #ifdef p3
+std::mutex mtx1;
 int shared_data = 100;
 #endif
 
@@ -16,12 +15,12 @@ void use_lock()
 {
 	while (true)
 	{
-		mtx1.lock();
 #ifdef p3
+		mtx1.lock();
 		shared_data++;
 		std::cout << "Current thread ID = " << std::this_thread::get_id() << ", shared_data = " << shared_data << std::endl;
-#endif
 		mtx1.unlock();
+#endif
 		std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}
 }
@@ -33,8 +32,8 @@ void test_lock()
 		while (true)
 		{
 			{
-				std::lock_guard<std::mutex> lk_guard(mtx1);
 #ifdef p3
+				std::lock_guard<std::mutex> lk_guard(mtx1);
 				shared_data--;
 				std::cout << "Current thread ID = " << std::this_thread::get_id() << ", shared_data = " << shared_data << std::endl;
 #endif
