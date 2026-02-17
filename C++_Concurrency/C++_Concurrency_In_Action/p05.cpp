@@ -1,6 +1,8 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <memory>
+#include <chrono>
 
 class Single2
 {
@@ -64,11 +66,70 @@ void test_single2hungry()
 	}
 }
 
+// ¿¡∫∫ Ω
+class SingletonOnce
+{
+private:
+	SingletonOnce() = default;
+	SingletonOnce(const SingletonOnce&) = delete;
+	SingletonOnce& operator=(const SingletonOnce&) = delete;
+
+public:
+	static std::shared_ptr<SingletonOnce> getInstance()
+	{
+		static std::once_flag flag;
+		std::call_once(flag, [&]() {
+
+			_instance = std::shared_ptr<SingletonOnce>(new SingletonOnce);
+		});
+		return _instance;
+	}
+
+	void printAddress()
+	{
+		std::cout << _instance.get() << std::endl;
+	}
+
+	~SingletonOnce()
+	{
+		std::cout << "SingletonOnce destructed!" << std::endl;
+	}
+
+private:
+	static std::shared_ptr<SingletonOnce> _instance;
+};
+
+std::shared_ptr<SingletonOnce> SingletonOnce::_instance = nullptr;
+
+void TestSingle()
+{
+	std::thread t1([]() {
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		SingletonOnce::getInstance()->printAddress();
+	});
+
+	std::thread t2([]() {
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		SingletonOnce::getInstance()->printAddress();
+	});
+
+	t1.join();
+	t2.join();
+}
+
+template<typename T>
+
+
 #if 1
 
 int main()
 {
-	test_single2();
+	// test_single2();
+
+	// test_single2hungry();
+
+	TestSingle();
+
 	return 0;
 }
 
