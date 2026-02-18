@@ -178,8 +178,6 @@ void SafeDeletor(LogicSystem* other)
 
 std::function<void(LogicSystem*)> LogicSystem::_deletor = SafeDeletor;
 
-
-
 void test_singleton()
 {
 	std::thread t1([]() {
