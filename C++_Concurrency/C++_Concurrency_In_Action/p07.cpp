@@ -49,13 +49,59 @@ void use_package()
 	std::cout << "The thread task result: " << value << std::endl;
 }
 
+void set_value(std::promise<int> prom)
+{
+	// 设置 promise 的值
+	std::this_thread::sleep_for(std::chrono::seconds(5));
+	prom.set_value(10);
+	std::cout << "Promise set value success!" << std::endl;
+}
+
+void use_promise()
+{
+	// 创建一个 promise 对象
+	std::promise<int> prom;
+
+	// 获取与 promise 相关的 future 对象
+	std::future<int> fut = prom.get_future();
+
+	// 在新线程中设置 promise 的值
+	std::thread t(set_value, std::move(prom));
+
+	// 在主线程中获取 future 的值
+	std::cout << "Waiting for the thread to set the value." << std::endl;
+	std::cout << "Value set by the thread: " << fut.get() << std::endl;
+	t.join();
+}
+
+void set_exception(std::promise<int> prom)
+{
+	try
+	{
+		// 抛出一个异常
+		throw std::runtime_error("An error occurred!");
+	}
+	catch (...)
+	{
+		// 设置 promise 的异常
+		prom.set_exception(std::current_exception());
+	}
+}
+
+void use_promise_exception()
+{
+
+}
+
 #if 1
 
 int main()
 {
 	// use_async();
 
-	use_package();
+	// use_package();
+
+	use_promise();
 
 	return 0;
 }
