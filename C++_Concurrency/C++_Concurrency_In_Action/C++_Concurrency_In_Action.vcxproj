@@ -136,6 +136,7 @@
     <ClCompile Include="p04.cpp" />
     <ClCompile Include="p05.cpp" />
     <ClCompile Include="p07.cpp" />
+    <ClCompile Include="p08.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thread_pool.h" />

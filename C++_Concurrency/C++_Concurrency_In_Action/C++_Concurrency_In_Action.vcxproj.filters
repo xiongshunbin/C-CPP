@@ -36,6 +36,9 @@
     <ClCompile Include="p07.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="p08.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thread_pool.h">

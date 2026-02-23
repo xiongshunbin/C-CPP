@@ -215,11 +215,13 @@ void test_thread_pool()
 void use_thread_pool()
 {
 	int m = 0;
-	ThreadPool::getInstance().commit([](int& m) {
+	auto res = ThreadPool::getInstance().commit([](int& m) {
 		m = 1024;
 		std::cout << "Inner set m: " << m << std::endl;
 	}, std::ref(m));
-	std::this_thread::sleep_for(std::chrono::seconds(3));
+
+	//std::this_thread::sleep_for(std::chrono::seconds(3));
+	res.get();
 	std::cout << "m = " << m << std::endl;
 }
 
