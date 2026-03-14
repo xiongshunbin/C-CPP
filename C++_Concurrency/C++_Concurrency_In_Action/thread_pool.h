@@ -50,6 +50,7 @@ private:
 	{
 		start();
 	}
+
 	~ThreadPool()
 	{
 		stop();
