@@ -101,7 +101,7 @@ std::list<T> parallel_quick_sort(std::list<T> input)
 		return t < pivot;
 	});
 	std::list<T> lower_part;
-	lower_part.splice(lower_part.begin(), input, input.begin(), divide_point);
+	lower_part.splice(lower_part.end(), input, input.begin(), divide_point);
 	std::future<std::list<T>> new_lower(std::async(&parallel_quick_sort<T>, std::move(lower_part)));
 	auto new_higher(parallel_quick_sort(std::move(input)));
 	result.splice(result.end(), new_higher);
@@ -121,17 +121,53 @@ void test_parallel_sort()
 	std::cout << std::endl;
 }
 
+// Ïß³Ì³Ø
+template<typename T>
+std::list<T> thread_pool_quick_sort(std::list<T> input)
+{
+	if (input.empty())
+	{
+		return input;
+	}
+	std::list<T> result;
+	result.splice(result.begin(), input, input.begin());
+	T const& pivot = *result.begin();
+	auto divide_point = std::partition(input.begin(), input.end(), [&](T const& t) {
+		return t < pivot;
+	});
+	std::list<T> lower_part;
+	lower_part.splice(lower_part.end(), input, input.begin(), divide_point);
+	auto new_lower = ThreadPool::getInstance().commit(&thread_pool_quick_sort<T>, std::move(lower_part));
+	auto new_higher(sequential_quick_sort(std::move(input)));
+	result.splice(result.end(), new_higher);
+	result.splice(result.begin(), new_lower.get());
+	return result;
+}
+
+void test_thread_pool_sort()
+{
+	std::list<int> numlists = { 6, 1, 0, 7, 5, 2, 9, -1 };
+	auto sort_result = thread_pool_quick_sort(numlists);
+	std::cout << "Sorted result:";
+	for (auto iter = sort_result.begin(); iter != sort_result.end(); iter++)
+	{
+		std::cout << " " << (*iter);
+	}
+	std::cout << std::endl;
+}
 
 
 #if 1
 
 int main()
 {
-	// test_quick_sort();
+	 // test_quick_sort();
 
 	// test_sequential_quick();
 
 	// test_parallel_sort();
+
+	 test_thread_pool_sort();
 
 	return 0;
 }
