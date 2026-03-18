@@ -15,37 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="p01.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="p02.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="p03.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="p04.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="p05.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="p06.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="p07.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="p08.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="p9.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="thread_pool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

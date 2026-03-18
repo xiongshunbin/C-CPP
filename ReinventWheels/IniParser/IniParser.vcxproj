@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{442ed414-9855-4f20-a745-599436ab0599}</ProjectGuid>
-    <RootNamespace>CConcurrencyInAction</RootNamespace>
+    <ProjectGuid>{986ba7cc-d584-4aec-8820-9a6ebd6af992}</ProjectGuid>
+    <RootNamespace>IniParser</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -104,7 +104,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,7 +118,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,18 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="p06.cpp" />
-    <ClCompile Include="p01.cpp" />
-    <ClCompile Include="p02.cpp" />
-    <ClCompile Include="p03.cpp" />
-    <ClCompile Include="p04.cpp" />
-    <ClCompile Include="p05.cpp" />
-    <ClCompile Include="p07.cpp" />
-    <ClCompile Include="p08.cpp" />
-    <ClCompile Include="p9.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="thread_pool.h" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
